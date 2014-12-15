@@ -1,0 +1,9 @@
+set autoindent
+set ruler
+syntax on
+set tabstop=3
+highlight Comment ctermfg=green
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
