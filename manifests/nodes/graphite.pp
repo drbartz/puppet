@@ -15,6 +15,10 @@ node /graphite02.*/ {
 	package { [ 'epel-release', 'git' , 'libffi-devel', 'mod_wsgi' ]:
 		ensure => installed,
 	}
+	package { 'python-pip':
+		ensure => installed,
+		require => Package['epel-release'],
+	}
 	package { 'httpd':
 		ensure => installed,
 		before => File['/etc/httpd/conf.d/graphite.conf'],
@@ -25,6 +29,13 @@ node /graphite02.*/ {
 
    file { '/opt/graphite':
    	ensure    => directory,
+		mode      => '0644',
+		owner     => 'root',
+		group     => 'root',
+	}
+
+   file { '/var/log/graphite/webapp':
+		ensure    => directory,
 		mode      => '0644',
 		owner     => 'root',
 		group     => 'root',
@@ -46,25 +57,37 @@ node /graphite02.*/ {
 		group     => 'root',
 	}
 
-	class { 'python' :
-		version    => 'system',
-		pip        => true,
-		dev        => true,
-		virtualenv => false,
-		gunicorn   => false,
+   file { '/opt/graphite/install_graphite.sh':
+   	ensure    => present,
+      content   => file('graphite/install_graphite.sh'),
+		mode      => '0755',
+		owner     => 'root',
+		group     => 'root',
 	}
 
-	python::requirements { '/opt/graphite/requirements.txt' :
-		owner      => 'root',
-	}
+	#class { 'python' :
+		#version    => 'system',
+		#pip        => true,
+		#dev        => true,
+		#virtualenv => false,
+		#gunicorn   => false,
+	#}
+#
+	#python::requirements { '/opt/graphite/requirements.txt' :
+		#owner      => 'root',
+	#}
+#
+   #python::pip { ['whisper', 'carbon', 'graphite-web']:
+	  #ensure		=> present,
+   #}
 
-   python::pip { ['whisper', 'carbon', 'graphite-web']:
-	  ensure		=> present,
-   }
+	#exec { "/usr/bin/python /opt/graphite/webapp/graphite/manage.py syncdb":
+		#cwd     => "/opt/graphite",
+		#path    => ["/usr/bin", "/usr/sbin"]
+	#}
 
-	exec { "/usr/bin/python /opt/graphite/webapp/graphite/manage.py syncdb":
+	exec { "/opt/graphite/install.sh":
 		cwd     => "/opt/graphite",
-		path    => ["/usr/bin", "/usr/sbin"]
 	}
 
 	service { 'httpd':
