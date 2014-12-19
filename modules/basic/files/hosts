@@ -1,4 +1,5 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 10.10.10.2  puppet
-10.10.10.3  graphite01
+10.10.10.3  graphite01 graphite01.local
+10.10.10.4  graphite02 graphite02.local
