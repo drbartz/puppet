@@ -6,4 +6,11 @@ class puppet::server {
 		owner     => 'root',
 		group     => 'root',
 	}
+	file { '/root/clean_cert.sh':
+		ensure    => present,
+		content   => file('puppet/clean_cert.sh'),
+		mode      => '0755',
+		owner     => 'root',
+		group     => 'root',
+	}
 }
