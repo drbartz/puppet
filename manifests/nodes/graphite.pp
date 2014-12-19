@@ -1,6 +1,10 @@
 node /graphite01.*$/ {
-	package { [ 'epel-release', 'graphite-web', 'python-carbon',  'httpd', 'mod_wsgi']:
+	package { [ 'epel-release', 'httpd', 'mod_wsgi']:
 		ensure => installed,
+	}
+	package { [ 'graphite-web', 'python-carbon' ]:
+		ensure => installed,
+		require => Package['epel-release'],
 	}
 	include basic
 	include puppet::client
