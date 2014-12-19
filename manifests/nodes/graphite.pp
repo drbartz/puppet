@@ -12,8 +12,12 @@ node /graphite01.*$/ {
 }
 
 node /graphite02.*/ {
-	package { [ 'epel-release', 'git' , 'libffi-devel', 'httpd', 'mod_wsgi' ]:
+	package { [ 'epel-release', 'git' , 'libffi-devel', 'mod_wsgi' ]:
 		ensure => installed,
+	}
+	package { 'httpd':
+		ensure => installed,
+		before => File['/etc/httpd/conf.d/graphite.conf'],
 	}
 	include basic
 	include puppet::client
@@ -40,7 +44,6 @@ node /graphite02.*/ {
 		mode      => '0644',
 		owner     => 'root',
 		group     => 'root',
-		require => Package['httpd'],
 	}
 
 	class { 'python' :
@@ -67,6 +70,7 @@ node /graphite02.*/ {
 	service { 'httpd':
 		ensure => running,
 		enable => true,
+		subscribe => File['/etc/httpd/conf.d/graphite.conf'],
 	}
 
 }
