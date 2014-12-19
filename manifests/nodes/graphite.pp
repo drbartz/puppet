@@ -34,13 +34,6 @@ node /graphite02.*/ {
 		group     => 'root',
 	}
 
-   file { '/var/log/graphite/webapp':
-		ensure    => directory,
-		mode      => '0644',
-		owner     => 'root',
-		group     => 'root',
-	}
-
    file { '/opt/graphite/requirements.txt':
    	ensure    => present,
       content   => file('graphite/requirements.txt'),
