@@ -79,7 +79,7 @@ node /graphite02.*/ {
 		#path    => ["/usr/bin", "/usr/sbin"]
 	#}
 
-	exec { "/opt/graphite/install.sh":
+	exec { "/opt/graphite/install_graphite.sh":
 		cwd     => "/opt/graphite",
 	}
 
