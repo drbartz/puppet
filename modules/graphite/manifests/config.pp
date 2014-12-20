@@ -1,61 +1,7 @@
-node /graphite01.*$/ {
-	package { [ 'epel-release', 'httpd', 'mod_wsgi']:
-		ensure => installed,
-	}
-	package { [ 'graphite-web', 'python-carbon' ]:
-		ensure => installed,
-		require => Package['epel-release'],
-	}
-	include basic
-	include puppet::client
-	#include graphite
-}
-
-node /graphite02.*/ {
-	include basic
-	include puppet::client
-	include graphite::install_from_git
-	include graphite::config
-}
-
-node /graphite03.*/ {
-	package { [ 'epel-release', 'git' , 'libffi-devel', 'mod_wsgi' ]:
-		ensure => installed,
-	}
-	package { [ 'python-pip', 'pycairo', 'Django14', 'python-ldap', 'python-memcached', 'python-sqlite2', 'bitmap', 'bitmap-fonts-compat' ]:
-		ensure => installed,
-		require => Package['epel-release'],
-	}
-	package { [ 'python-devel', 'python-crypto', 'pyOpenSSL', 'gcc', 'python-zope-filesystem', 'python-zope-interface',  'gcc-c++']:
-		ensure => installed,
-		require => Package['epel-release'],
-	}
-	package { [ 'zlib-static', 'MySQL-python', 'python-txamqp', 'python-setuptools', 'python-psycopg2']:
-		ensure => installed,
-		require => Package['epel-release'],
-	}
-	package { 'httpd':
-		ensure => installed,
-		before => File['/etc/httpd/conf.d/graphite.conf'],
-	}
-	include basic
-	include puppet::client
-	#include graphite
-	
-	exec { "/opt/graphite/install_graphite.sh":
-		cwd     => "/opt/graphite",
-	}
+class graphite::config {
 
    file { '/opt/graphite':
    	ensure    => directory,
-		mode      => '0644',
-		owner     => 'root',
-		group     => 'root',
-	}
-
-   file { '/opt/graphite/requirements.txt':
-   	ensure    => present,
-      content   => file('graphite/requirements.txt'),
 		mode      => '0644',
 		owner     => 'root',
 		group     => 'root',
@@ -73,14 +19,6 @@ node /graphite03.*/ {
    	ensure    => present,
       content   => file('graphite/iptables'),
 		mode      => '0644',
-		owner     => 'root',
-		group     => 'root',
-	}
-
-   file { '/opt/graphite/install_graphite.sh':
-   	ensure    => present,
-      content   => file('graphite/install_graphite.sh'),
-		mode      => '0755',
 		owner     => 'root',
 		group     => 'root',
 	}

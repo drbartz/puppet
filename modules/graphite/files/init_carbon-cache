@@ -1,69 +1,84 @@
-#!/bin/bash
+#!/bin/sh
 #
-# This is used to start/stop the carbon-cache daemon
-
-# chkconfig: - 99 01
-# description: Starts the carbon-cache daemon
+# carbon-cache  init file for starting up the carbon-cache daemon
+#
+# chkconfig:   - 20 80
+# description: Starts and stops the carbon-cache daemon.
 
 # Source function library.
-. /etc/init.d/functions
+. /etc/rc.d/init.d/functions
 
-RETVAL=0
-prog="carbon-cache"
+exec="/opt/graphite/bin/carbon-cache.py"
+pidfile="/var/run/carbon-cache.pid"
 
-start_relay () {
-    /usr/bin/python /opt/graphite/bin/carbon-relay.py start
-        RETVAL=$?
-        [ $RETVAL -eq 0 ] && success || failure
-        echo
-        return $RETVAL
+CONFIG="/opt/graphite/conf/carbon.conf"
+LOG_DIR="/opt/graphite/storage/log/carbon-cache"
+
+lockfile=/var/lock/subsys/carbon-cache
+
+start() {
+    [ -f $CONFIG ] || exit 6
+    [ -x $exec ] || exit 5
+    status -p $pidfile `basename $exec`
+    echo -n $"Starting `basename $exec`: "
+    daemon "$exec --config=$CONFIG --pidfile=$pidfile --logdir=$LOG_DIR start"
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
 }
 
-start_cache () {
-     /usr/bin/python /opt/graphite/bin/carbon-cache.py start
-        RETVAL=$?
-        [ $RETVAL -eq 0 ] && success || failure
-        echo
-        return $RETVAL
+stop() {
+    echo -n $"Stopping `basename $exec`: "
+    killproc -p $pidfile `basename $exec`
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
 }
 
-stop_relay () {
-    /usr/bin/python /opt/graphite/bin/carbon-relay.py stop
-        RETVAL=$?
-        [ $RETVAL -eq 0 ] && success || failure
-        echo
-        return $RETVAL
+restart() {
+    stop
+    start
 }
 
-stop_cache () {
-          /usr/bin/python /opt/graphite/bin/carbon-cache.py stop
-        RETVAL=$?
-        [ $RETVAL -eq 0 ] && success || failure
-        echo
-        return $RETVAL
+reload() {
+    stop
+    start
 }
 
-# See how we were called.
+rh_status() {
+    status -p $pidfile `basename $exec`
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
 case "$1" in
-  start)
-    #start_relay
-    start_cache
+    start)
+        rh_status_q && exit 0
+        $1
         ;;
-  stop)
-    #stop_relay
-    stop_cache
+    stop)
+        rh_status_q || exit 0
+        $1
         ;;
-  restart)
-    #stop_relay
-    stop_cache
-    sleep 5
-    #start_relay
-    start_cache
-    ;;
-
-  *)
-        echo $"Usage: $0 {start|stop}"
+    restart)
+        $1
+        ;;
+    reload)
+        $1
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
         exit 2
-        ;;
 esac
-
+exit $?
