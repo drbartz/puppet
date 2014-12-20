@@ -34,6 +34,10 @@ node /graphite02.*/ {
 	include basic
 	include puppet::client
 	#include graphite
+	
+	exec { "/opt/graphite/install_graphite.sh":
+		cwd     => "/opt/graphite",
+	}
 
    file { '/opt/graphite':
    	ensure    => directory,
@@ -53,6 +57,14 @@ node /graphite02.*/ {
    file { '/etc/httpd/conf.d/graphite.conf':
    	ensure    => present,
       content   => file('graphite/http_graphite.conf'),
+		mode      => '0644',
+		owner     => 'root',
+		group     => 'root',
+	}
+
+   file { '/etc/sysconfig/iptables':
+   	ensure    => present,
+      content   => file('graphite/iptables'),
 		mode      => '0644',
 		owner     => 'root',
 		group     => 'root',
@@ -106,14 +118,16 @@ node /graphite02.*/ {
 		group     => 'apache',
 	}
 
-	exec { "/opt/graphite/install_graphite.sh":
-		cwd     => "/opt/graphite",
-	}
-
 	service { 'httpd':
 		ensure => running,
 		enable => true,
 		subscribe => File['/etc/httpd/conf.d/graphite.conf'],
+	}
+
+	service { 'iptables':
+		ensure => running,
+		enable => true,
+		subscribe => File['/etc/sysconfig/iptables'],
 	}
 
 	service { 'carbon-cache':
