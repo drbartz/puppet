@@ -15,7 +15,15 @@ node /graphite02.*/ {
 	package { [ 'epel-release', 'git' , 'libffi-devel', 'mod_wsgi' ]:
 		ensure => installed,
 	}
-	package { 'python-pip':
+	package { [ 'python-pip', 'pycairo', 'Django14', 'python-ldap', 'python-memcached', 'python-sqlite2', 'bitmap', 'bitmap-fonts-compat' ]:
+		ensure => installed,
+		require => Package['epel-release'],
+	}
+	package { [ 'python-devel', 'python-crypto', 'pyOpenSSL', 'gcc', 'python-zope-filesystem', 'python-zope-interface',  'gcc-c++']:
+		ensure => installed,
+		require => Package['epel-release'],
+	}
+	package { [ 'zlib-static', 'MySQL-python', 'python-txamqp', 'python-setuptools', 'python-psycopg2']:
 		ensure => installed,
 		require => Package['epel-release'],
 	}
@@ -58,26 +66,45 @@ node /graphite02.*/ {
 		group     => 'root',
 	}
 
-	#class { 'python' :
-		#version    => 'system',
-		#pip        => true,
-		#dev        => true,
-		#virtualenv => false,
-		#gunicorn   => false,
-	#}
-#
-	#python::requirements { '/opt/graphite/requirements.txt' :
-		#owner      => 'root',
-	#}
-#
-   #python::pip { ['whisper', 'carbon', 'graphite-web']:
-	  #ensure		=> present,
-   #}
+   file { '/etc/init.d/carbon-cache':
+   	ensure    => present,
+      content   => file('graphite/init_carbon-cache'),
+		mode      => '0755',
+		owner     => 'root',
+		group     => 'root',
+	}
 
-	#exec { "/usr/bin/python /opt/graphite/webapp/graphite/manage.py syncdb":
-		#cwd     => "/opt/graphite",
-		#path    => ["/usr/bin", "/usr/sbin"]
-	#}
+   file { '/opt/graphite/conf/graphite.wsgi':
+   	ensure    => present,
+      content   => file('graphite/graphite.wsgi'),
+		mode      => '0755',
+		owner     => 'apache',
+		group     => 'apache',
+	}
+
+   file { '/opt/graphite/conf/storage-schemas.conf':
+   	ensure    => present,
+      content   => file('graphite/storage-schemas.conf'),
+		mode      => '0644',
+		owner     => 'apache',
+		group     => 'apache',
+	}
+
+   file { '/opt/graphite/conf/carbon.conf':
+   	ensure    => present,
+      content   => file('graphite/carbon.conf'),
+		mode      => '0644',
+		owner     => 'apache',
+		group     => 'apache',
+	}
+
+   file { '/opt/graphite/conf/storage-aggregation.conf':
+   	ensure    => present,
+      content   => file('graphite/storage-aggregation.conf'),
+		mode      => '0644',
+		owner     => 'apache',
+		group     => 'apache',
+	}
 
 	exec { "/opt/graphite/install_graphite.sh":
 		cwd     => "/opt/graphite",
@@ -89,4 +116,8 @@ node /graphite02.*/ {
 		subscribe => File['/etc/httpd/conf.d/graphite.conf'],
 	}
 
+	service { 'carbon-cache':
+		ensure => running,
+		enable => true,
+	}
 }

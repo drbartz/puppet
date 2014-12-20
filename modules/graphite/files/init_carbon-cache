@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# This is used to start/stop the carbon-cache daemon
+
+# chkconfig: - 99 01
+# description: Starts the carbon-cache daemon
+
+# Source function library.
+. /etc/init.d/functions
+
+RETVAL=0
+prog="carbon-cache"
+
+start_relay () {
+    /usr/bin/python /opt/graphite/bin/carbon-relay.py start
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && success || failure
+        echo
+        return $RETVAL
+}
+
+start_cache () {
+     /usr/bin/python /opt/graphite/bin/carbon-cache.py start
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && success || failure
+        echo
+        return $RETVAL
+}
+
+stop_relay () {
+    /usr/bin/python /opt/graphite/bin/carbon-relay.py stop
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && success || failure
+        echo
+        return $RETVAL
+}
+
+stop_cache () {
+          /usr/bin/python /opt/graphite/bin/carbon-cache.py stop
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && success || failure
+        echo
+        return $RETVAL
+}
+
+# See how we were called.
+case "$1" in
+  start)
+    #start_relay
+    start_cache
+        ;;
+  stop)
+    #stop_relay
+    stop_cache
+        ;;
+  restart)
+    #stop_relay
+    stop_cache
+    sleep 5
+    #start_relay
+    start_cache
+    ;;
+
+  *)
+        echo $"Usage: $0 {start|stop}"
+        exit 2
+        ;;
+esac
+
