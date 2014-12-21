@@ -1,12 +1,5 @@
 class graphite::config {
 
-   file { '/opt/graphite':
-   	ensure    => directory,
-		mode      => '0644',
-		owner     => 'root',
-		group     => 'root',
-	}
-
    file { '/etc/httpd/conf.d/graphite.conf':
    	ensure    => present,
       content   => file('graphite/http_graphite.conf'),
@@ -80,4 +73,10 @@ class graphite::config {
 		enable => true,
 		subscribe => File['/opt/graphite/conf/carbon.conf'],
 	}
+
+	Exec['/opt/graphite/install_graphite.sh'] -> File['/opt/graphite/conf/storage-aggregation.conf'] -> File['/etc/init.d/carbon-cache'] -> File['/opt/graphite/conf/carbon.conf'] -> File['/opt/graphite/conf/storage-schemas.conf'] -> Service['carbon-cache']
+	Exec['/opt/graphite/install_graphite.sh'] -> File['/etc/httpd/conf.d/graphite.conf'] -> Service['carbon-cache']
+	Exec['/opt/graphite/install_graphite.sh'] -> File['/opt/graphite/conf/graphite.wsgi'] -> Service['carbon-cache']
+	Service['carbon-cache'] -> Service['httpd'] 
+
 }

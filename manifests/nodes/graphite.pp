@@ -16,6 +16,7 @@ node /graphite02.*/ {
 	include puppet::client
 	include graphite::install_from_git
 	include graphite::config
+	Class['graphite::install_from_git'] ~> Class['graphite::config']
 }
 
 node /graphite03.*/ {
