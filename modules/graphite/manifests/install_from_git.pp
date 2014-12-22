@@ -26,5 +26,5 @@ class graphite::install_from_git {
 		group     => 'root',
 	}
 
-	File['/opt/graphite'] -> Exec['/opt/graphite/install_graphite.sh'] 
+	File['/opt/graphite'] -> Exec['/opt/graphite/install_graphite.sh']  -> Service['iptables']
 }

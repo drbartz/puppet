@@ -6,6 +6,7 @@ class graphite::config {
 		mode      => '0644',
 		owner     => 'root',
 		group     => 'root',
+		notify	 => Service['carbon-cache']
 	}
 
    file { '/etc/sysconfig/iptables':
@@ -14,6 +15,7 @@ class graphite::config {
 		mode      => '0644',
 		owner     => 'root',
 		group     => 'root',
+		notify	=> Service['iptables'],
 	}
 
    file { '/etc/init.d/carbon-cache':
@@ -22,6 +24,7 @@ class graphite::config {
 		mode      => '0755',
 		owner     => 'root',
 		group     => 'root',
+		notify	 => Service['carbon-cache']
 	}
 
    file { '/opt/graphite/conf/graphite.wsgi':
@@ -30,6 +33,7 @@ class graphite::config {
 		mode      => '0755',
 		owner     => 'apache',
 		group     => 'apache',
+		notify	 => Service['httpd']
 	}
 
    file { '/opt/graphite/conf/storage-schemas.conf':
@@ -38,6 +42,7 @@ class graphite::config {
 		mode      => '0644',
 		owner     => 'apache',
 		group     => 'apache',
+		notify	 => Service['carbon-cache']
 	}
 
    file { '/opt/graphite/conf/carbon.conf':
@@ -46,6 +51,7 @@ class graphite::config {
 		mode      => '0644',
 		owner     => 'apache',
 		group     => 'apache',
+		notify	 => Service['carbon-cache']
 	}
 
    file { '/opt/graphite/conf/storage-aggregation.conf':
@@ -54,29 +60,33 @@ class graphite::config {
 		mode      => '0644',
 		owner     => 'apache',
 		group     => 'apache',
+		notify	 => Service['carbon-cache']
 	}
 
 	service { 'httpd':
-		ensure => running,
-		enable => true,
-		subscribe => File['/etc/httpd/conf.d/graphite.conf'],
+		ensure	=> running,
+		enable	=> true,
+		require	=> File['/opt/graphite/conf/graphite.wsgi']
 	}
 
 	service { 'iptables':
-		ensure => running,
-		enable => true,
-		subscribe => File['/etc/sysconfig/iptables'],
+		ensure	=> running,
+		enable	=> true,
+		require	=> File['/etc/sysconfig/iptables'],
 	}
 
 	service { 'carbon-cache':
-		ensure => running,
-		enable => true,
-		subscribe => File['/opt/graphite/conf/carbon.conf'],
+		ensure	=> running,
+		enable	=> true,
+		require	=> [ 
+							File['/etc/init.d/carbon-cache'],
+							File['/opt/graphite/conf/carbon.conf'],
+							File['/opt/graphite/conf/storage-aggregation.conf'],
+							File['/opt/graphite/conf/storage-schemas.conf'],
+						],
 	}
 
-	Exec['/opt/graphite/install_graphite.sh'] -> File['/opt/graphite/conf/storage-aggregation.conf'] -> File['/etc/init.d/carbon-cache'] -> File['/opt/graphite/conf/carbon.conf'] -> File['/opt/graphite/conf/storage-schemas.conf'] -> Service['carbon-cache']
-	Exec['/opt/graphite/install_graphite.sh'] -> File['/etc/httpd/conf.d/graphite.conf'] -> Service['carbon-cache']
-	Exec['/opt/graphite/install_graphite.sh'] -> File['/opt/graphite/conf/graphite.wsgi'] -> Service['carbon-cache']
-	Service['carbon-cache'] -> Service['httpd'] 
+	# iptables is the last service executed by install, so, lets keep the chain ;-)
+	Service['iptables'] -> Service['carbon-cache'] -> Service['httpd']
 
 }
