@@ -29,6 +29,6 @@ then
 	chown -R apache:apache /opt/graphite/storage/
 	chcon -R -h -t httpd_sys_content_t /opt/graphite/storage
 
-	service httpd restart
+	#service httpd restart
 	date > ${build_dir}/.install
 fi
