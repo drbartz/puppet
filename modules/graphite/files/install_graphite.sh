@@ -26,7 +26,7 @@ then
 	cd /opt/graphite/webapp/graphite
 	python manage.py syncdb --noinput
 
-	chown -R apache:apache /opt/graphite/storage/
+	chown -R carbon:carbon /opt/graphite/storage/
 	chcon -R -h -t httpd_sys_content_t /opt/graphite/storage
 
 	#service httpd restart
