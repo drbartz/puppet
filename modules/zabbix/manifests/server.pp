@@ -1,21 +1,5 @@
 class zabbix::server {
 
-	file { '/etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX' :
-		ensure		=> present,
-		content	=> file('zabbix/RPM-GPG-KEY-ZABBIX'),
-		owner		=> "root",
-		group		=> "root",
-		mode		=> 644,
-	}
-
-	file { '/etc/yum.repos.d/zabbix.repo' :
-		ensure		=> present,
-		content	=> file('zabbix/zabbix.repo'),
-		owner		=> "root",
-		group		=> "root",
-		mode		=> 644,
-	}
-
 	package { ['epel-release', 'iptables']:
 		ensure	=> installed,
 	}
@@ -23,9 +7,8 @@ class zabbix::server {
 	package { ['zabbix-server', 'zabbix-web-mysql','zabbix-java-gateway']:
 		ensure	=> installed,
 		require	=> [
-			File['/etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX'],
-			File['/etc/yum.repos.d/zabbix.repo'],
 			Package['epel-release'], 
+			Class['zabbix::repo'], 
 		],
 	}
 
@@ -42,21 +25,28 @@ class zabbix::server {
 		ensure 	=> present,
 		content 	=> file('zabbix/zabbix_http_conf'),
 		notify	=> Service['httpd'],
-		require	=> Package['httpd'],
+		require	=> [
+			Package['httpd'],
+			Package['zabbix-server'],
+		],
 	}
 
 	file { '/etc/zabbix/web/zabbix.conf.php':
 		ensure 	=> present,
 		content 	=> file('zabbix/zabbix_conf.php'),
-		notify	=> Service['zabbix-server'],
-		require	=> File['/etc/zabbix/web'],
+		notify	=> Service['httpd'],
+		require	=> [
+			File['/etc/zabbix/web'],
+			Package['zabbix-server'],
+			Package['httpd'],
+		],
 	}
 
 	file {'/etc/zabbix/zabbix_server.conf':
 		ensure 	=> present,
 		content 	=> file('zabbix/zabbix_server.conf'),
 		notify	=> Service['zabbix-server'],
-		require	=> File['/etc/zabbix'],
+		require	=> Package['zabbix-server'],
 	}
 
 	file {'/etc/zabbix/.install_zabbix_server.sh':
@@ -71,13 +61,20 @@ class zabbix::server {
 	exec {'Post install zabbix':
 		command	=> '/etc/zabbix/.install_zabbix_server.sh',
 		creates	=> '/etc/zabbix/.install_zabbix_server.done',
-		require	=> File['/etc/zabbix/.install_zabbix_server.sh'],
+		require	=> [
+			File['/etc/zabbix/.install_zabbix_server.sh'],
+			Package['zabbix-server'],
+			Service['mysqld'],
+		],
 	}
 
 	service {'zabbix-server':
 		ensure	=> running,
 		enable	=> true,
-		require	=> Exec['Post install zabbix'],
+		require	=> [
+			Package['zabbix-server'],
+			Exec['Post install zabbix'],
+		],
 	}
 
 	file {'/etc/sysconfig/iptables':

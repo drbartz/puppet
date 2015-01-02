@@ -1,4 +1,5 @@
 class zabbix::agent {
+
 	#file { [ "/etc/zabbix/", "/var/log/zabbix" ]:
 		#ensure	=> directory,
 		#owner 	=> zabbix,
@@ -10,8 +11,12 @@ class zabbix::agent {
 		owner 	=> zabbix,
 		group 	=> zabbix,
 		mode		=> 0644,
-		notify	=> Service["zabbix-agent"],
-		content 	=> file("zabbix/zabbix_agent.conf"),
+		notify	=> Service['zabbix-agent'],
+		require	=> [
+			Class['zabbix::repo'],
+			Package['zabbix-agent'],
+		],
+		content 	=> file('zabbix/zabbix_agent.conf'),
 	}
 
 #	file { "/etc/zabbix/zabbix_agentd.userparams.conf":
@@ -41,10 +46,10 @@ class zabbix::agent {
 			File["/etc/zabbix/zabbix_agentd.conf"], 
 			Package["zabbix-agent"],
 		],
-		notify	=> 'zabbix-agent',
 	}
 
 	package { "zabbix-agent":
 		ensure=> present,
+		require	=> Class['zabbix::repo'],
 	}
 }
