@@ -16,11 +16,11 @@ class zabbix::server {
 		mode		=> 644,
 	}
 
-	package { 'epel-release':
+	package { ['epel-release', 'iptables']:
 		ensure	=> installed,
 	}
 
-	package { ['zabbix-server', 'zabbix-web-mysql','zabbix-agent','zabbix-java-gateway']:
+	package { ['zabbix-server', 'zabbix-web-mysql','zabbix-java-gateway']:
 		ensure	=> installed,
 		require	=> [
 			File['/etc/pki/rpm-gpg/RPM-GPG-KEY-ZABBIX'],
@@ -33,11 +33,23 @@ class zabbix::server {
 		ensure 	=> directory,
 	}
 
+	file {'/etc/zabbix/web':
+		ensure 	=> directory,
+		require	=> File['/etc/zabbix'],
+	}
+
 	file { '/etc/httpd/conf.d/zabbix.conf':
 		ensure 	=> present,
 		content 	=> file('zabbix/zabbix_http_conf'),
 		notify	=> Service['httpd'],
 		require	=> Package['httpd'],
+	}
+
+	file { '/etc/zabbix/web/zabbix.conf.php':
+		ensure 	=> present,
+		content 	=> file('zabbix/zabbix_conf.php'),
+		notify	=> Service['zabbix-server'],
+		require	=> File['/etc/zabbix/web'],
 	}
 
 	file {'/etc/zabbix/zabbix_server.conf':
@@ -53,10 +65,7 @@ class zabbix::server {
 		group		=> "root",
 		mode		=> 755,
 		content 	=> file('zabbix/install_zabbix_server.sh'),
-		require	=> [
-			File['/etc/zabbix'],
-			#Package['zabbix-server'],
-		],
+		require	=> File['/etc/zabbix'],
 	}
 
 	exec {'Post install zabbix':
@@ -69,6 +78,22 @@ class zabbix::server {
 		ensure	=> running,
 		enable	=> true,
 		require	=> Exec['Post install zabbix'],
+	}
+
+	file {'/etc/sysconfig/iptables':
+		ensure	=> present,
+		owner		=> "root",
+		group		=> "root",
+		mode		=> 600,
+		content 	=> file('zabbix/iptables'),
+		require	=> Package['iptables'],
+		notify	=> Service['iptables'],
+	}
+
+	service {'iptables':
+		ensure	=> running,
+		enable	=> true,
+		require	=> Package['iptables'],
 	}
 
 }

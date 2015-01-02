@@ -1,33 +1,33 @@
 class zabbix::agent {
-	file { [ "/etc/zabbix/", "/var/log/zabbix" ]:
-		ensure	=> directory,
-		owner 	=> zabbix,
-		group 	=> zabbix,
-		mode		=> 0755,
-	}
+	#file { [ "/etc/zabbix/", "/var/log/zabbix" ]:
+		#ensure	=> directory,
+		#owner 	=> zabbix,
+		#group 	=> zabbix,
+		#mode		=> 0755,
+	#}
 
 	file { "/etc/zabbix/zabbix_agentd.conf":
 		owner 	=> zabbix,
 		group 	=> zabbix,
 		mode		=> 0644,
 		notify	=> Service["zabbix-agent"],
-		content 	=> template("zabbix/zabbix_agent.erb"),
+		content 	=> file("zabbix/zabbix_agent.conf"),
 	}
 
-	file { "/etc/zabbix/zabbix_agentd.userparams.conf":
-		owner => zabbix,
-		group => zabbix,
-		mode=> 0644,
-		notify=> Service["zabbix-agent"],
-		content => template("zabbix/zabbix_agentd.userparams.erb");
-	}
+#	file { "/etc/zabbix/zabbix_agentd.userparams.conf":
+#		owner => zabbix,
+#		group => zabbix,
+#		mode=> 0644,
+#		notify=> Service["zabbix-agent"],
+#		content => template("zabbix/zabbix_agentd.userparams.erb");
+#	}
 
-	file {"/var/run/zabbix":
-		ensure=> directory,
-		owner => zabbix,
-		group => zabbix,
-		mode=> 0775;
-	}
+#	file {"/var/run/zabbix":
+#		ensure=> directory,
+#		owner => zabbix,
+#		group => zabbix,
+#		mode=> 0775;
+#	}
 
 	#sudo::file { 'zbx': }
 
@@ -41,6 +41,7 @@ class zabbix::agent {
 			File["/etc/zabbix/zabbix_agentd.conf"], 
 			Package["zabbix-agent"],
 		],
+		notify	=> 'zabbix-agent',
 	}
 
 	package { "zabbix-agent":
