@@ -1,6 +1,6 @@
 class zabbix::server {
 
-	package { ['epel-release', 'iptables']:
+	package { ['epel-release', 'iptables', 'git']:
 		ensure	=> installed,
 	}
 
@@ -64,6 +64,7 @@ class zabbix::server {
 		require	=> [
 			File['/etc/zabbix/.install_zabbix_server.sh'],
 			Package['zabbix-server'],
+			Package['git'],
 			Service['mysqld'],
 		],
 	}

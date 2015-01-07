@@ -14,4 +14,8 @@ mysql -u zabbix -p${Zabbix_Pass} zabbix < /usr/share/doc/zabbix-server-mysql-2.4
 
 mysql -u zabbix -p${Zabbix_Pass} zabbix < /usr/share/doc/zabbix-server-mysql-2.4.3/create/data.sql
 
+cd /etc/zabbix
+git clone https://github.com/drbartz/zabbix_api
+python /etc/zabbix/zabbix_api/zabbix_api.py
+
 date > /etc/zabbix/.install_zabbix_server.done
