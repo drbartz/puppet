@@ -1,5 +1,7 @@
 class zabbix::agent {
 
+	include zabbix::repo
+
 	#file { [ "/etc/zabbix/", "/var/log/zabbix" ]:
 		#ensure	=> directory,
 		#owner 	=> zabbix,
