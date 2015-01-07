@@ -2,9 +2,10 @@
 node /graphite01.*/ {
 	include basic
 	include puppet::client
-	include graphite::install_from_git
-	include graphite::config
-	Class['graphite::install_from_git'] -> Class['graphite::config']
+	include graphite::server_git
+	#include graphite::install_from_git
+	#include graphite::config
+	#Class['graphite::install_from_git'] -> Class['graphite::config']
 }
 
 # install graphite from epel rpm packages
