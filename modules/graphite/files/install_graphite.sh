@@ -30,6 +30,7 @@ then
 
 	chown -R carbon:carbon /opt/graphite
 	chown -R apache:apache /opt/graphite/storage
+	chown -R carbon:carbon /opt/graphite/storage/whisper
 	chcon -R -h -t httpd_sys_content_t /opt/graphite/storage
 
 	#service httpd restart

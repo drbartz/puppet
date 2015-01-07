@@ -12,7 +12,9 @@ exec="/opt/graphite/bin/carbon-cache.py"
 pidfile="/var/run/carbon-cache.pid"
 
 CONFIG="/opt/graphite/conf/carbon.conf"
-LOG_DIR="/opt/graphite/storage/log/carbon-cache"
+
+LOG_DIR=`egrep '^LOG_DIR.*=' /opt/graphite/conf/carbon.conf | awk '{print $NF}'`
+[[ ${LOG_DIR} == "" ]] && LOG_DIR="/opt/graphite/storage/log/carbon-cache"
 
 lockfile=/var/lock/subsys/carbon-cache
 

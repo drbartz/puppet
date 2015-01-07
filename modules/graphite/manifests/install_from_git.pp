@@ -12,6 +12,13 @@ class graphite::install_from_git {
 		creates => "/opt/graphite/.install",
 	}
 
+	file { '/var/log/carbon':
+		ensure    => directory,
+		mode      => '0644',
+		owner     => 'carbon',
+		group     => 'carbon',
+	}
+
 	file { '/opt/graphite':
 		ensure    => directory,
 		mode      => '0644',
