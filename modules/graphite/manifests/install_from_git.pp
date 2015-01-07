@@ -9,13 +9,14 @@ class graphite::install_from_git {
 
 	exec { '/opt/graphite/install_graphite.sh' :
 		cwd     => "/opt/graphite",
+		creates => "/opt/graphite/.install",
 	}
 
 	file { '/opt/graphite':
 		ensure    => directory,
 		mode      => '0644',
-		owner     => 'root',
-		group     => 'root',
+		owner     => 'carbon',
+		group     => 'carbon',
 	}
 											
 	file { '/opt/graphite/install_graphite.sh':

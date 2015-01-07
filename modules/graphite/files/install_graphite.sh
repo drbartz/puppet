@@ -1,12 +1,14 @@
 #!/bin/bash
 
 build_dir="/tmp/graphite"
+TMP_File="/opt/graphite/.install"
 
-if [[ ! -f "${build_dir}/.install" ]]
+if [[ ! -f "${TMP_File}" ]]
 then 
 	carbon_version="0.9.12"
 	whisper_version="0.9.12"
 	graphite_web_version="0.9.12"
+	[[ -d  ${build_dir} ]] && rm -rf "${build_dir}"
 	install -d ${build_dir}
 	cd ${build_dir}
 	curl -s -L https://github.com/graphite-project/carbon/archive/${carbon_version}.tar.gz | tar xz
@@ -26,9 +28,10 @@ then
 	cd /opt/graphite/webapp/graphite
 	python manage.py syncdb --noinput
 
-	chown -R carbon:carbon /opt/graphite/storage/
+	chown -R carbon:carbon /opt/graphite
+	chown -R apache:apache /opt/graphite/storage
 	chcon -R -h -t httpd_sys_content_t /opt/graphite/storage
 
 	#service httpd restart
-	date > ${build_dir}/.install
+	date > ${TMP_File}
 fi
