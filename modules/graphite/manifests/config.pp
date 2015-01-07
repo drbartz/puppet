@@ -15,6 +15,7 @@ class graphite::config {
 		mode      => '0644',
 		owner     => 'root',
 		group     => 'root',
+		require	=> Package['iptables'],
 		notify	=> Service['iptables'],
 	}
 

@@ -1,4 +1,14 @@
-node /graphite01.*$/ {
+# install graphite from git 
+node /graphite01.*/ {
+	include basic
+	include puppet::client
+	include graphite::install_from_git
+	include graphite::config
+	Class['graphite::install_from_git'] -> Class['graphite::config']
+}
+
+# install graphite from epel rpm packages
+node /graphite02.*$/ {
 	package { [ 'epel-release', 'httpd', 'mod_wsgi']:
 		ensure => installed,
 	}
@@ -10,12 +20,3 @@ node /graphite01.*$/ {
 	include puppet::client
 	#include graphite
 }
-
-node /graphite02.*/ {
-	include basic
-	include puppet::client
-	include graphite::install_from_git
-	include graphite::config
-	Class['graphite::install_from_git'] -> Class['graphite::config']
-}
-
