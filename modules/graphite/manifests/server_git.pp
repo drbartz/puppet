@@ -1,7 +1,7 @@
 class graphite::server_git {
 	include httpd
 
-	package { [ 'epel-release', 'git' , 'libffi-devel', 'mod_wsgi', 'iptables' ]:
+	package { [ 'libffi-devel', 'mod_wsgi', 'iptables' ]:
 		ensure => installed,
 	}
 	package { [ 'python-pip', 'pycairo', 'Django14', 'python-ldap', 'python-memcached', 'python-sqlite2', 'bitmap', 'bitmap-fonts-compat', 'python-devel', 'python-crypto', 'pyOpenSSL', 'gcc', 'python-zope-filesystem', 'python-zope-interface',  'gcc-c++', 'zlib-static', 'MySQL-python', 'python-txamqp', 'python-setuptools', 'python-psycopg2', 'dejavu-sans-fonts', 'dejavu-serif-fonts']:
@@ -131,6 +131,19 @@ class graphite::server_git {
 		require	=> Exec['/opt/graphite/install_graphite.sh'],
 	}
 
+   file { '/opt/graphite/webapp/graphite/local_settings.py':
+   	ensure    => present,
+      content   => file('graphite/local_settings.py'),
+		mode      => '0644',
+		owner     => 'apache',
+		group     => 'apache',
+		notify	 => Service['httpd'],
+		require	=> [
+			Package['httpd'],
+			Exec['/opt/graphite/install_graphite.sh'],
+		],
+	}
+
    file { '/opt/graphite/conf/carbon.conf':
    	ensure    => present,
       content   => file('graphite/carbon.conf'),
@@ -168,6 +181,18 @@ class graphite::server_git {
 		notify	 => [
 			Service['carbon-cache'],
 			Service['carbon-relay'],
+			Service['carbon-aggregator'],
+		],
+		require	=> Exec['/opt/graphite/install_graphite.sh'],
+	}
+
+   file { '/opt/graphite/conf/aggregation-rules.conf':
+   	ensure    => present,
+      content   => file('graphite/aggregation-rules.conf'),
+		mode      => '0644',
+		owner     => 'carbon',
+		group     => 'carbon',
+		notify	 => [
 			Service['carbon-aggregator'],
 		],
 		require	=> Exec['/opt/graphite/install_graphite.sh'],

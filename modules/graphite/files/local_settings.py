@@ -54,18 +54,18 @@ TIME_ZONE = 'Europe/Madrid'
 #####################################
 # Change only GRAPHITE_ROOT if your install is merely shifted from /opt/graphite
 # to somewhere else
-#GRAPHITE_ROOT = '/opt/graphite'
-GRAPHITE_ROOT = '/usr/share/graphite'
+GRAPHITE_ROOT = '/opt/graphite'
+#GRAPHITE_ROOT = '/usr/share/graphite'
 
 # Most installs done outside of a separate tree such as /opt/graphite will only
 # need to change these three settings. Note that the default settings for each
 # of these is relative to GRAPHITE_ROOT
-#CONF_DIR = '/opt/graphite/conf'
-#STORAGE_DIR = '/opt/graphite/storage'
-#CONTENT_DIR = '/opt/graphite/webapp/content'
-CONF_DIR = '/etc/graphite-web'
-STORAGE_DIR = '/var/lib/graphite-web'
-CONTENT_DIR = '/usr/share/graphite/webapp/content'
+CONF_DIR = '/opt/graphite/conf'
+STORAGE_DIR = '/opt/graphite/storage'
+CONTENT_DIR = '/opt/graphite/webapp/content'
+#CONF_DIR = '/etc/graphite-web'
+#STORAGE_DIR = '/var/lib/graphite-web'
+#CONTENT_DIR = '/usr/share/graphite/webapp/content'
 
 # To further or fully customize the paths, modify the following. Note that the
 # default settings for each of these are relative to CONF_DIR and STORAGE_DIR
@@ -76,16 +76,17 @@ CONTENT_DIR = '/usr/share/graphite/webapp/content'
 
 ## Data directories
 # NOTE: If any directory is unreadable in DATA_DIRS it will break metric browsing
-#WHISPER_DIR = '/opt/graphite/storage/whisper'
-#RRD_DIR = '/opt/graphite/storage/rrd'
-#DATA_DIRS = [WHISPER_DIR, RRD_DIR] # Default: set from the above variables
-#LOG_DIR = '/opt/graphite/storage/log/webapp'
-#INDEX_FILE = '/opt/graphite/storage/index'  # Search index file
-WHISPER_DIR = '/var/lib/carbon/whisper/'
-RRD_DIR = '/var/lib/carbon/rrd'
+WHISPER_DIR = '/opt/graphite/storage/whisper'
+RRD_DIR = '/opt/graphite/storage/rrd'
 DATA_DIRS = [WHISPER_DIR, RRD_DIR] # Default: set from the above variables
-LOG_DIR = '/var/log/graphite-web/'
-INDEX_FILE = '/var/lib/graphite-web/index'  # Search index file
+#LOG_DIR = '/opt/graphite/storage/log/webapp'
+LOG_DIR = '/var/log/httpd'
+INDEX_FILE = '/opt/graphite/storage/index'  # Search index file
+#WHISPER_DIR = '/var/lib/carbon/whisper/'
+#RRD_DIR = '/var/lib/carbon/rrd'
+#DATA_DIRS = [WHISPER_DIR, RRD_DIR] # Default: set from the above variables
+#LOG_DIR = '/var/log/httpd/'
+#INDEX_FILE = '/var/lib/graphite-web/index'  # Search index file
 
 
 #####################################

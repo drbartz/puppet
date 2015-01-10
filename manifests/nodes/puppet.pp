@@ -3,4 +3,5 @@ node 'puppet' {
 	include puppet::client
 	include puppet::server
 	#include zabbix::agent
+	include graphite::collect
 }

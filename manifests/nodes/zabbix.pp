@@ -5,6 +5,7 @@ node /zabbix*/ {
 	include zabbix::repo
 	include zabbix::agent
 	include zabbix::server
+	include graphite::collect
 	Class['basic'] -> Class['httpd'] -> Class['mysqld'] 
 	#-> Class['zabbix::repo'] -> Class['zabbix::server'] -> Class['zabbix::agent']
 }

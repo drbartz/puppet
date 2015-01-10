@@ -1,10 +1,6 @@
 class zabbix::server {
-
-	package { ['epel-release', 'iptables', 'git']:
-		ensure	=> installed,
-	}
-
-	package { ['zabbix-server', 'zabbix-web-mysql','zabbix-java-gateway']:
+	
+	package { ['iptables', 'zabbix-server', 'zabbix-web-mysql','zabbix-java-gateway']:
 		ensure	=> installed,
 		require	=> [
 			Package['epel-release'], 
