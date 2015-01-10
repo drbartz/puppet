@@ -58,7 +58,7 @@ class graphite::collect {
 		command => 'tar -zxf /opt/collect/psutil-2.2.0.tgz',
 		cwd => '/usr/lib64/python2.6/site-packages',
 		path => '/bin',
-		creates => '/usr/lib64/python2.6/site-packages/psutil',
+		creates => '/usr/lib64/python2.6/site-packages/psutil.done',
 		require => File['/opt/collect/psutil-2.2.0.tgz'],
 	}
 
