@@ -1,5 +1,12 @@
 class skyline {
 
+	include redis
+
+	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis']:
+		ensure	=> present,
+		require	=> Package['epel-release'],
+	}
+
 	file { '/etc/init.d/skyline-analyzer':
 		ensure    => present,
 		content   => file('skyline/init_skyline_analyzer'),
@@ -57,5 +64,4 @@ class skyline {
 		enable	=> true,
 		require	=> File['/etc/init.d/skyline-web'],
 	}
-
 }
