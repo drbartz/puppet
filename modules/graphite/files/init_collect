@@ -18,7 +18,7 @@ start() {
     status -p $pidfile `basename $exec`
     echo -n $"Starting `basename $exec`: "
     daemon "$exec &"
-	 ps uwax | grep ${exec} | awk '{print $2}' > $pidfile
+	 ps uwax | grep ${exec} | grep -v grep | awk '{print $2}' > $pidfile
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
