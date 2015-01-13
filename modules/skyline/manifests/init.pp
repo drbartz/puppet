@@ -1,8 +1,6 @@
 class skyline {
-
 	include redis
-
-	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis']:
+	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis', 'scipy']:
 		ensure	=> present,
 		require	=> Package['epel-release'],
 	}
@@ -14,6 +12,7 @@ class skyline {
 		owner     => 'root',
 		group     => 'root',
 		notify	 => Service['skyline-analyzer'],
+		require	=> Exec['/tmp/.install_skyline.sh'],
 	}
 
 	file { '/etc/init.d/skyline-horizon':
@@ -23,6 +22,7 @@ class skyline {
 		owner     => 'root',
 		group     => 'root',
 		notify	 => Service['skyline-horizon'],
+		require	=> Exec['/tmp/.install_skyline.sh'],
 	}
 
 	file { '/etc/init.d/skyline-web':
@@ -32,6 +32,7 @@ class skyline {
 		owner     => 'root',
 		group     => 'root',
 		notify	 => Service['skyline-web'],
+		require	=> Exec['/tmp/.install_skyline.sh'],
 	}
 
 	file { '/opt/skyline/src/settins.py':
@@ -45,12 +46,34 @@ class skyline {
 			Service['skyline-horizon'],
 			Service['skyline-web'],
 		],
+		require	=> Exec['/tmp/.install_skyline.sh'],
+	}
+
+	file { '/tmp/.install_skyline.sh':
+		ensure    => present,
+		content   => file('skyline/install_skyline.sh'),
+		mode      => '0755',
+		owner     => 'root',
+		group     => 'root',
+	}
+
+	exec {'/tmp/.install_skyline.sh':
+		cwd	=>  '/opt/',
+		creates	=> '/opt/skyline/.install.done',
+		require	=> [
+			File['/tmp/.install_skyline.sh'],
+			Package['scipy'],
+			Package['python-pip'],
+		],
 	}
 
 	service { 'skyline-analyzer':
 		ensure	=> running,
 		enable	=> true,
-		require	=> File['/etc/init.d/skyline-analyzer'],
+		require	=> [
+			File['/etc/init.d/skyline-analyzer'],
+			Exec['/tmp/.install_skyline.sh'],
+		],
 	}
 
 	service { 'skyline-horizon':
