@@ -18,14 +18,15 @@ unittest2
 mock
 #python-simple-hipchat
 msgpack-python
-#numpy
+numpy
 pandas
-#scipy
+scipy
 patsy
 statsmodels
 __END__
 
-pip install --upgrade numpy >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
+#pip install --upgrade numpy >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
+#pip install --upgrade scipy >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
 pip install -r requirements.txt >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
 git clone https://github.com/etsy/skyline  >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
 [ -d '/opt' ] || mkdir /opt

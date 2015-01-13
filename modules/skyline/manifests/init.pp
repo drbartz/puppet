@@ -1,6 +1,6 @@
 class skyline {
 	include redis
-	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis', 'scipy']:
+	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis']: 
 		ensure	=> present,
 		require	=> Package['epel-release'],
 	}
@@ -35,7 +35,7 @@ class skyline {
 		require	=> Exec['/tmp/.install_skyline.sh'],
 	}
 
-	file { '/opt/skyline/src/settins.py':
+	file { '/opt/skyline/src/settings.py':
 		ensure    => present,
 		content   => file('skyline/skyline_settings.py'),
 		mode      => '0755',
@@ -62,7 +62,6 @@ class skyline {
 		creates	=> '/opt/skyline/.install.done',
 		require	=> [
 			File['/tmp/.install_skyline.sh'],
-			Package['scipy'],
 			Package['python-pip'],
 		],
 	}
