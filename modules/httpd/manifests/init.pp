@@ -17,6 +17,12 @@ class httpd {
 		ensure	=> present,
 	}
 
+	file {'/var/log/httpd':
+		ensure	=> directory,
+		owner => 'apache',
+		group => 'apache',
+	}
+
 	service { 'httpd':
 		ensure		=> running,
 		enable		=> true,
