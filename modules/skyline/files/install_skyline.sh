@@ -10,6 +10,7 @@ date >  ${OUTPUT_FILE}
 # install Python pre-reqs 
 cat > requirements.txt << __END__
 redis==2.7.2
+cython
 hiredis==0.1.1
 python-daemon==1.6
 flask==0.9
