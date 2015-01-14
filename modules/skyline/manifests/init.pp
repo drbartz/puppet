@@ -1,8 +1,17 @@
 class skyline {
 	include redis
-	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis']: 
+	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis', 'iptables']: 
 		ensure	=> present,
 		require	=> Package['epel-release'],
+	}
+
+	file {'/etc/sysconfig/iptables':
+		ensure	=> present,
+		content	=> file('skyline/iptables'),
+		mode		=> '0600',
+		owner		=> 'root',
+		group		=> 'root',
+		notify	=> Service['iptables'],
 	}
 
 	file {'/var/log/skyline':
@@ -75,20 +84,45 @@ class skyline {
 		timeout     => 1800,
 		require	=> [
 			File['/tmp/.install_skyline.sh'],
-			Exec['/usr/bin/pip install scipy --upgrade'],
+			#Exec['/usr/bin/pip install scipy --upgrade'],
+			Exec['python-scipy'],
+			Exec['python-statsmodels'],
 			File['/var/log/skyline'],
 			File['/var/run/skyline'],
 		],
 	}
 
-	exec {'/usr/bin/pip install scipy --upgrade':
-		timeout     => 1800,
-		require		=> Exec['/usr/bin/pip install numpy --upgrade'],
+	# install from GIT: use to generate a new TGZ for next step. Take tooo long!	
+	#exec {'/usr/bin/pip install scipy --upgrade':
+	#	# 1 hour timeout !!!
+	#	timeout     => 3600,
+	#	require		=> Exec['/usr/bin/pip install numpy --upgrade'],
+	#}
+
+	exec {'python-scipy':
+		command	=> '/bin/tar -zxf /vagrant/statsmodels-0.6.1.tgz',
+		cwd		=> '/usr/lib64/python2.6/site-packages',
+		creates	=> '/usr/lib64/python2.6/site-packages/statsmodels.done',
+	}
+
+	exec {'python-statsmodels':
+		command	=> '/bin/tar -zxf /vagrant/scipy-0.15.0.tgz',
+		cwd		=> '/usr/lib64/python2.6/site-packages',
+		creates	=> '/usr/lib64/python2.6/site-packages/scipy.done',
 	}
 
 	exec {'/usr/bin/pip install numpy --upgrade':
 		timeout     => 1800,
 		require		=> Package['python-pip'], 
+	}
+
+	service {'iptables':
+		ensure	=> running,
+		enable	=> true,
+		require	=> [
+			File['/etc/sysconfig/iptables'],
+			Package['iptables'],
+		],	
 	}
 	
 	service { 'skyline-analyzer':
