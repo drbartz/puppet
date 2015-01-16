@@ -1,6 +1,6 @@
 class skyline {
 	include redis
-	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis']: 
+	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis', 'iptables']: 
 		ensure	=> present,
 		require	=> Package['epel-release'],
 	}
@@ -69,27 +69,45 @@ class skyline {
 		group     => 'root',
 	}
 
+	file { '/etc/sysconfig/iptables':
+		ensure    => present,
+		content   => file('skyline/iptables'),
+		mode      => '0600',
+		owner     => 'root',
+		group     => 'root',
+		require	=> Package['iptables'],
+		notify	=> Service['iptables'],
+	}
+
 	exec {'/tmp/.install_skyline.sh':
 		cwd	=>  '/opt/',
 		creates	=> '/opt/skyline/.install.done',
 		timeout     => 1800,
 		require	=> [
 			File['/tmp/.install_skyline.sh'],
-			Exec['/usr/bin/pip install scipy --upgrade'],
+			#Exec['/usr/bin/pip install scipy --upgrade'],
+			Package['gcc'], 
+			Package['gcc-c++'],
+			Package['python-devel'], 
+			Package['python-pip'],
+			Package['lapack'], 
+			Package['lapack-devel'],
+			Package['blas'], 
+			Package['blas-devel'], 
 			File['/var/log/skyline'],
 			File['/var/run/skyline'],
 		],
 	}
 
-	exec {'/usr/bin/pip install scipy --upgrade':
-		timeout     => 1800,
-		require		=> Exec['/usr/bin/pip install numpy --upgrade'],
-	}
-
-	exec {'/usr/bin/pip install numpy --upgrade':
-		timeout     => 1800,
-		require		=> Package['python-pip'], 
-	}
+	#exec {'/usr/bin/pip install scipy --upgrade':
+	#	timeout     => 1800,
+	#	require		=> Exec['/usr/bin/pip install numpy --upgrade'],
+	#}
+#
+#	exec {'/usr/bin/pip install numpy --upgrade':
+#		timeout     => 1800,
+#		require		=> Package['python-pip'], 
+#	}
 	
 	service { 'skyline-analyzer':
 		ensure	=> running,
@@ -110,5 +128,11 @@ class skyline {
 		ensure	=> running,
 		enable	=> true,
 		require	=> File['/etc/init.d/skyline-web'],
+	}
+	
+	service { 'iptables':
+		ensure	=> running,
+		enable	=> true,
+		require	=> Package['iptables'],
 	}
 }
