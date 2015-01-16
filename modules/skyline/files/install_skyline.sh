@@ -2,10 +2,20 @@
 
 TMP_DIR=/tmp/skyline
 OUTPUT_FILE=${TMP_DIR}/.install.done
+PACK_FILE="/vagrant/skyline_python_pack.1.0.1.tgz"
+
+# clean and prepare temp dir
 [ -d ${TMP_DIR} ] && rm -rf ${TMP_DIR}
 install -d  ${TMP_DIR}
 cd ${TMP_DIR}
 date >  ${OUTPUT_FILE}
+
+# try to install from tgz with slow packages ;-)
+if [ -f ${PACK_FILE} ]
+then
+	cd /usr/lib64/python2.6/site-packages
+	tar -zxf ${PACK_FILE}
+fi
 
 # install Python pre-reqs 
 cat > requirements.txt << __END__
@@ -34,9 +44,6 @@ patsy==0.3.0
 statsmodels==0.4.3
 __END__
 
-#pip install --upgrade numpy >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
-#pip install --upgrade scipy >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
-#pip install -r requirements.txt >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
 cat requirements.txt | grep -v ^# | while read pack; do echo $pack `date`; pip install $pack;done >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
 git clone https://github.com/etsy/skyline  >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
 [ -d '/opt' ] || mkdir /opt
