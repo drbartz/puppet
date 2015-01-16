@@ -5,6 +5,16 @@ class skyline {
 		require	=> Package['epel-release'],
 	}
 
+	file {'/etc/sysconfig/iptables':
+		ensure	=> present,
+		content	=> file('skyline/iptables'),
+		mode		=> '0600',
+		owner		=> 'root',
+		group		=> 'root',
+		require	=> Package['iptables'],
+		notify	=> Service['iptables'],
+	}
+
 	file {'/var/log/skyline':
 		ensure	=> directory,
 		owner	=> 'root',
@@ -69,23 +79,12 @@ class skyline {
 		group     => 'root',
 	}
 
-	file { '/etc/sysconfig/iptables':
-		ensure    => present,
-		content   => file('skyline/iptables'),
-		mode      => '0600',
-		owner     => 'root',
-		group     => 'root',
-		require	=> Package['iptables'],
-		notify	=> Service['iptables'],
-	}
-
 	exec {'/tmp/.install_skyline.sh':
 		cwd	=>  '/opt/',
 		creates	=> '/opt/skyline/.install.done',
 		timeout     => 1800,
 		require	=> [
 			File['/tmp/.install_skyline.sh'],
-			#Exec['/usr/bin/pip install scipy --upgrade'],
 			Package['gcc'], 
 			Package['gcc-c++'],
 			Package['python-devel'], 
@@ -94,20 +93,33 @@ class skyline {
 			Package['lapack-devel'],
 			Package['blas'], 
 			Package['blas-devel'], 
+			#Exec['python-scipy'],
+			#Exec['python-statsmodels'],
 			File['/var/log/skyline'],
 			File['/var/run/skyline'],
 		],
 	}
 
-	#exec {'/usr/bin/pip install scipy --upgrade':
-	#	timeout     => 1800,
-	#	require		=> Exec['/usr/bin/pip install numpy --upgrade'],
-	#}
-#
-#	exec {'/usr/bin/pip install numpy --upgrade':
-#		timeout     => 1800,
-#		require		=> Package['python-pip'], 
+#	exec {'python-scipy':
+#		command	=> '/bin/tar -zxf /vagrant/statsmodels-0.6.1.tgz',
+#		cwd		=> '/usr/lib64/python2.6/site-packages',
+#		creates	=> '/usr/lib64/python2.6/site-packages/statsmodels.done',
 #	}
+
+#	exec {'python-statsmodels':
+#		command	=> '/bin/tar -zxf /vagrant/scipy-0.15.0.tgz',
+#		cwd		=> '/usr/lib64/python2.6/site-packages',
+#		creates	=> '/usr/lib64/python2.6/site-packages/scipy.done',
+#	}
+
+	service {'iptables':
+		ensure	=> running,
+		enable	=> true,
+		require	=> [
+			File['/etc/sysconfig/iptables'],
+			Package['iptables'],
+		],	
+	}
 	
 	service { 'skyline-analyzer':
 		ensure	=> running,
@@ -130,9 +142,4 @@ class skyline {
 		require	=> File['/etc/init.d/skyline-web'],
 	}
 	
-	service { 'iptables':
-		ensure	=> running,
-		enable	=> true,
-		require	=> Package['iptables'],
-	}
 }
