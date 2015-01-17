@@ -3,6 +3,7 @@
 TMP_DIR=/tmp/skyline
 OUTPUT_FILE=${TMP_DIR}/.install.done
 PACK_FILE="/vagrant/skyline_python_pack.1.0.1.tgz"
+SKYLINE_GIT_SOURCE="https://github.com/drbartz/skyline"
 
 # clean and prepare temp dir
 [ -d ${TMP_DIR} ] && rm -rf ${TMP_DIR}
@@ -45,7 +46,7 @@ statsmodels==0.4.3
 __END__
 
 cat requirements.txt | grep -v ^# | while read pack; do echo $pack `date`; pip install $pack;done >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
-git clone https://github.com/etsy/skyline  >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
+git clone ${SKYLINE_GIT_SOURCE}  >> ${OUTPUT_FILE} 2>>  ${OUTPUT_FILE}
 [ -d '/opt' ] || mkdir /opt
 [ -d '/opt/skyline' ] && rm -rf /opt/skyline
 mv skyline /opt
