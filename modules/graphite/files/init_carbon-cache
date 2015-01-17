@@ -40,7 +40,6 @@ stop() {
 	lockfile="/var/lock/subsys/carbon-cache-${instance}"
 	echo -n $"Stopping `basename $exec`: "
 	killproc -p $pidfile `basename $exec`
-	killproc -p $pidfile `basename $exec`
 	retval=$?
 	echo
 	[ $retval -eq 0 ] && rm -f $lockfile
