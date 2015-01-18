@@ -38,6 +38,9 @@ GRAPHITE_HOST = '10.10.10.3'
 # %s will be replaced by the metric name
 GRAPH_URL = 'http://' + GRAPHITE_HOST + '/render/?width=1400&from=-1hour&target=%s'
 
+# Name before skyline in the graphite tree
+GRAPHITE_PREFIX = 'srv.tools'
+
 # If you have a Graphite host set up, set its Carbon port.
 CARBON_PORT = 2013
 
@@ -105,7 +108,7 @@ ALGORITHMS = [
 
 # This is the number of algorithms that must return True before a metric is
 # classified as anomalous.
-CONSENSUS = 6
+CONSENSUS = 4
 
 # This is to enable second order anomalies. This is an experimental feature, so
 # it's turned off by default.
@@ -122,7 +125,7 @@ ENABLE_ALERTS = True
 #          ("metric3", "hipchat", EXPIRATION_TIME),
 #         )
 ALERTS = (
-    ("skyline", "smtp", 1800),
+    ("skyline", "hipchat", 1800),
 )
 
 # Each alert module requires additional information.
@@ -138,11 +141,11 @@ SMTP_OPTS = {
 
 # HipChat alerts require python-simple-hipchat
 HIPCHAT_OPTS = {
-    "auth_token": "pagerduty_auth_token",
+    "auth_token": "29746dd1e89b6a73be85793cb5b298",
     # list of hipchat room_ids to notify about each anomaly
     # (similar to SMTP_OPTS['recipients'])
     "rooms": {
-        "skyline": (12345,),
+        "skyline": (1124274,),
     },
     # Background color of hipchat messages
     # (One of "yellow", "red", "green", "purple", "gray", or "random".)
