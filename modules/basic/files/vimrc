@@ -1,7 +1,8 @@
 set autoindent
 set ruler
 syntax on
-set tabstop=3
+set tabstop=4
+set expandtab
 highlight Comment ctermfg=green
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
