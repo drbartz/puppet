@@ -3,7 +3,7 @@
 TMP_DIR=/tmp/skyline
 OUTPUT_FILE=${TMP_DIR}/.install.done
 PACK_FILE="/vagrant/skyline_python_pack.1.0.1.tgz"
-SKYLINE_GIT_SOURCE="https://github.com/drbartz/skyline"
+SKYLINE_GIT_SOURCE="https://github.com/drbartz/skyline -b devel"
 
 # clean and prepare temp dir
 [ -d ${TMP_DIR} ] && rm -rf ${TMP_DIR}
