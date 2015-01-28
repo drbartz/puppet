@@ -97,7 +97,8 @@ class Collect:
 		for entry,stat in enumerate(stats):
 			if not whitelist or entry in whitelist:
 				for k,v in stat._asdict().iteritems():
-					self.add_data("so.cpu.%d.%s"%(entry,k),v,type='COUNTER')
+					value=v*100
+					self.add_data("so.cpu.%d.%s"%(entry,k),value,type='COUNTER')
 	def collect_phymem_usage(self):
 		"""
 		collect_phymem_usage is a list of pysical memory to be collected

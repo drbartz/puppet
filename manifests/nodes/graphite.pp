@@ -4,5 +4,5 @@ node /graphite01.*/ {
 	include puppet::client
 	include graphite::server_git
 	include graphite::collect
-	include zabbix::agent
+	#include zabbix::agent
 }
