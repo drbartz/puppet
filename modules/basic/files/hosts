@@ -4,4 +4,5 @@
 10.10.10.3  graphite01 graphite01.local
 10.10.10.4  graphite02 graphite02.local
 10.10.10.5  zabbix-server zabbix-server.local
-10.10.10.6  oculus  oculus01 oculus.local oculus01.local
+10.10.10.6  skyline skyline01 skyline.local skyline01.local
+10.10.10.7  oculus  oculus01 oculus.local oculus01.local
