@@ -1,7 +1,7 @@
 class graphite::server_git {
 	include httpd
 
-	package { [ 'libffi-devel', 'mod_wsgi', 'iptables' ]:
+	package { [ 'libffi-devel', 'mod_wsgi' ]:
 		ensure => installed,
 	}
 	package { [ 'python-pip', 'pycairo', 'Django14', 'python-ldap', 'python-memcached', 'python-sqlite2', 'bitmap', 'bitmap-fonts-compat', 'python-devel', 'python-crypto', 'pyOpenSSL', 'gcc', 'python-zope-filesystem', 'python-zope-interface',  'gcc-c++', 'zlib-static', 'MySQL-python', 'python-txamqp', 'python-setuptools', 'python-psycopg2', 'dejavu-sans-fonts', 'dejavu-serif-fonts']:
