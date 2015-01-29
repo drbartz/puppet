@@ -14,9 +14,10 @@ class redis {
 	}
 
 	file {'/etc/redis.conf':
-		ensure   => present,
-		content  => file('redis/redis.conf'),
+		ensure  => present,
+		content => file('redis/redis.conf'),
 		require	=> Exec['/root/.install_redis.sh'],
+		notify  => Service['redis'],
 	}
 
 	service { 'redis':

@@ -63,7 +63,8 @@ ANOMALY_DUMP = 'webapp/static/dump/anomalies.json'
 # if you set ANALYZER_PROCESSES to several less than the total number of
 # CPUs on your box. Be sure to leave some CPU room for the Horizon workers,
 # and for Redis.
-ANALYZER_PROCESSES = 5
+#ANALYZER_PROCESSES = 5
+ANALYZER_PROCESSES = 2
 
 # This is the duration, in seconds, for a metric to become 'stale' and for
 # the analyzer to ignore it until new datapoints are added. 'Staleness' means
