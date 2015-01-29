@@ -75,6 +75,24 @@ class oculus {
         require     => Exec['/tmp/.install_oculus.sh'],
 	}
 
+	file { '/etc/cron.d/oculus':
+		ensure    => present,
+		content   => file('oculus/cron_oculus'),
+		mode      => '0644',
+		owner     => 'root',
+		group     => 'root',
+        require     => Exec['/tmp/.install_oculus.sh'],
+	}
+
+	file { '/opt/oculus/scripts/import.sh':
+		ensure    => present,
+		content   => file('oculus/oculus_import.sh'),
+		mode      => '0755',
+		owner     => 'root',
+		group     => 'root',
+        require     => Exec['/tmp/.install_oculus.sh'],
+	}
+
 #	file { '/opt/skyline/src/settings.py':
 #		ensure    => present,
 #		content   => file('skyline/skyline_settings.py'),

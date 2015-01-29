@@ -44,9 +44,10 @@ rake build
 cp -a OculusPlugins.jar /opt/elasticsearch-0.90.0/lib/.
 
 # oculus install
-cd ../../oculus
+cd ${TMP_DIR}/oculus
 gem install bundler
 bundle install
+
 
 # move to the final destination (/opt)
 cd ${TMP_DIR}
