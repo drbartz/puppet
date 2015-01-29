@@ -1,8 +1,61 @@
 class redis {
+    
+    group { 'redis':
+        ensure => present,
+    }
+
+    user { 'redis':
+        ensure     => present,
+        gid        => 'redis',
+        groups     => ['redis'],
+        membership => minimum,
+        shell      => '/sbin/nologin',
+        require    => Group['redis'],
+    }
+
+    file {'/var/run/redis':
+        ensure  => directory,
+        mode    => '0755',
+        owner   => 'redis',
+        group   => 'redis',
+        require => User['redis'],
+    }
+
+    file {'/var/cache/redis-snapshot':
+        ensure  => directory,
+        mode    => '0755',
+        owner   => 'redis',
+        group   => 'redis',
+        require => User['redis'],
+    }
+
+    file {'/var/log/redis':
+        ensure  => directory,
+        mode    => '0755',
+        owner   => 'redis',
+        group   => 'redis',
+        require => User['redis'],
+    }
+
+    file {'/var/lib/redis':
+        ensure  => directory,
+        mode    => '0755',
+        owner   => 'redis',
+        group   => 'redis',
+        require => User['redis'],
+    }
 
 	file {'/root/.install_redis.sh':
 		ensure	=> present,
 		content	=> file('redis/install_redis.sh'),
+		mode		=> '0755',
+		owner		=> 'root',
+		group		=> 'root',
+	}
+	
+	file {'/etc/init.d/redis':
+		ensure	=> present,
+		content	=> file('redis/init_redis'),
 		mode		=> '0755',
 		owner		=> 'root',
 		group		=> 'root',
@@ -23,7 +76,12 @@ class redis {
 	service { 'redis':
 		ensure	=> running,
 		enable	=> true,
-		require	=> Exec['/root/.install_redis.sh'],
+		require	=> [
+            Exec['/root/.install_redis.sh'],
+		    File['/etc/init.d/redis'],
+		    File['/var/run/redis'],
+		    File['/var/log/redis'],
+        ],
 	}
 
 }

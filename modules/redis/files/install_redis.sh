@@ -11,6 +11,8 @@ wget http://download.redis.io/releases/redis-${RELEASE}.tar.gz
 tar xzf redis-${RELEASE}.tar.gz
 cd redis-${RELEASE}
 make
+make install
+cp -a redis.conf /etc/.
 cd /root 
 rm -rf ${TMP_DIR}
 touch /root/.install_redis.sh.done
