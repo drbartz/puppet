@@ -1,6 +1,6 @@
 class skyline {
 	include redis
-	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel', 'redis']: 
+	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel']: 
 		ensure	=> present,
 		require	=> Package['epel-release'],
 	}
@@ -99,18 +99,6 @@ class skyline {
 			File['/var/run/skyline'],
 		],
 	}
-
-#	exec {'python-scipy':
-#		command	=> '/bin/tar -zxf /vagrant/statsmodels-0.6.1.tgz',
-#		cwd		=> '/usr/lib64/python2.6/site-packages',
-#		creates	=> '/usr/lib64/python2.6/site-packages/statsmodels.done',
-#	}
-
-#	exec {'python-statsmodels':
-#		command	=> '/bin/tar -zxf /vagrant/scipy-0.15.0.tgz',
-#		cwd		=> '/usr/lib64/python2.6/site-packages',
-#		creates	=> '/usr/lib64/python2.6/site-packages/scipy.done',
-#	}
 
 	service {'iptables':
 		ensure	=> running,
