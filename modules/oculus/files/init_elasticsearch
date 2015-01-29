@@ -1,0 +1,80 @@
+#!/bin/sh
+#
+# skyline-horizon  init file for starting up the skyline-horizon daemon
+#
+# chkconfig:   - 20 80
+# description: Starts and stops the skyline-horizon daemon.
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+exec="/opt/elasticsearch-0.90.0/bin/elasticsearch"
+pidfile="/var/run/elasticsearch.pid"
+lockfile="/var/lock/subsys/elasticsearch"
+
+start() {
+    [ -x $exec ] || exit 5
+    echo -n $"Starting `basename $exec`: "
+    daemon "$exec -p ${pidfile}"
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    echo -n $"Stopping `basename $exec`: "
+    #killproc -p $pidfile `basename $exec`
+    killproc -p $pidfile
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    stop
+    start
+}
+
+rh_status() {
+    #status -p $pidfile `basename $exec`
+    status -p $pidfile 
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    reload)
+        $1
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
+        exit 2
+esac
+exit $?

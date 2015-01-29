@@ -3,4 +3,3 @@ node.name: "oculus01"
 script.native:
     oculus_euclidian.type: com.etsy.oculus.tsscorers.EuclidianScriptFactory
     oculus_dtw.type: com.etsy.oculus.tsscorers.DTWScriptFactory
-
