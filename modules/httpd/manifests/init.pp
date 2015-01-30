@@ -21,7 +21,10 @@ class httpd {
         ensure  => directory,
         owner   => 'apache',
         group   => 'apache',
-        require => User['apache'],
+        require => [
+            Package['httpd'],
+            User['apache'],
+        ],
     }
 
     service { 'httpd':

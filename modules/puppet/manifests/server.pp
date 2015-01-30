@@ -1,5 +1,5 @@
 class puppet::server {
-    include squid
+    include autocache
     file { '/etc/puppet/autosign.conf':
         ensure    => present,
         content   => file('puppet/autosign.conf'),

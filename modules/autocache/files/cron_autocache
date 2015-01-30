@@ -1,0 +1,2 @@
+# Script that imports data from squid into the local RPM repository
+*/2 * * * * root /opt/autocache/update.sh >> /var/log/autocache.log

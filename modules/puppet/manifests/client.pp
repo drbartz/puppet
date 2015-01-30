@@ -10,6 +10,14 @@ class puppet::client {
         content => file('puppet/client_yum.conf'),
     }
 
+    file {'/etc/yum.repos.d/autocache.repo':
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        content => file('puppet/autocache.repo'),
+    }
+
 	package {'puppet':
 		ensure => installed, 
 	}
