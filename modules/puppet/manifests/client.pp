@@ -5,6 +5,11 @@ class puppet::client {
 		notify => Service['puppet'],
 	}
 
+    file {'/etc/yum.conf':
+        ensure  => present,
+        content => file('puppet/client_yum.conf'),
+    }
+
 	package {'puppet':
 		ensure => installed, 
 	}
