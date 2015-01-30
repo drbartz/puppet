@@ -4,6 +4,7 @@ TMP_DIR=/tmp/oculus
 OUTPUT_FILE=${TMP_DIR}/.install.done
 PACK_FILE="/vagrant/skyline_python_pack.1.0.1.tgz"
 SKYLINE_GIT_SOURCE="https://github.com/drbartz/skyline -b devel"
+SET HTTP_PROXY=http://10.10.10.2:3128
 
 # clean and prepare temp dir
 [ -d ${TMP_DIR} ] && rm -rf ${TMP_DIR}
