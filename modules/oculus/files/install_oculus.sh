@@ -2,13 +2,13 @@
 
 TMP_DIR=/tmp/oculus
 OUTPUT_FILE=${TMP_DIR}/.install.done
-PACK_FILE="/vagrant/skyline_python_pack.1.0.1.tgz"
+PACK_FILE="/vagrant/oculus_pack.1.0.0.tgz"
 SKYLINE_GIT_SOURCE="https://github.com/drbartz/skyline -b devel"
 set HTTP_PROXY=http://10.10.10.2:3128
 export http_proxy=http://10.10.10.2:3128
 
 RUBY_PUPPET_VER=1.8.7
-RUBY_OCULUS_VER=2.1.2
+RUBY_OCULUS_VER=1.9.2
 ELASTICSEARCH_VER=0.90.3
 
 # clean and prepare temp dir
@@ -17,17 +17,20 @@ install -d  ${TMP_DIR}
 cd ${TMP_DIR}
 date >  ${OUTPUT_FILE}
 
+# install ruby RVM
+gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+curl -L get.rvm.io | bash -s stable
+source /etc/profile.d/rvm.sh
+
 # try to install from tgz with slow packages ;-)
 if [ -f ${PACK_FILE} ]
 then
-	cd /usr/lib64/python2.6/site-packages
+    [ -d '/usr/local/rvm/gems' ] || install -d /usr/local/rvm/gems
+	cd /usr/local/rvm/gems
 	tar -zxf ${PACK_FILE}
 fi
 
 # install ruby version ${RUBY_OCULUS_VER} (oculus) and 1.8.7 (puppet)
-gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-curl -L get.rvm.io | bash -s stable
-source /etc/profile.d/rvm.sh
 rvm install ${RUBY_OCULUS_VER}
 rvm install ${RUBY_PUPPET_VER}
 
