@@ -1,9 +1,8 @@
 #!/bin/sh
 #
-# skyline-horizon  init file for starting up the skyline-horizon daemon
+# thin-server  init file for starting up the oculus webserver daemon
 #
 # chkconfig:   - 20 80
-# description: Starts and stops the skyline-horizon daemon.
 
 # Source function library.
 . /etc/rc.d/init.d/functions
@@ -15,14 +14,20 @@ MY_RUBY_HOME=/usr/local/rvm/rubies/ruby-1.9.2-p330
 GEM_PATH=/usr/local/rvm/gems/ruby-1.9.2-p330:/usr/local/rvm/gems/ruby-1.9.2-p330@global
 RUBY_VERSION=ruby-1.9.2-p330
 
-exec="/opt/elasticsearch-0.90.3/bin/elasticsearch"
-pidfile="/var/run/elasticsearch.pid"
-lockfile="/var/lock/subsys/elasticsearch"
+export PATH GEM_HOME IRBRC MY_RUBY_HOME GEM_PATH RUBY_VERSION
+
+
+pidfile="/var/run/oculus/thin.pid"
+logfile="/var/log/oculus/web.log"
+lockfile="/var/lock/subsys/thin"
+exec="/usr/local/rvm/gems/ruby-1.9.2-p330/bin/thin"
+param=" -P ${pidfile} -l ${logfile} -d -c /opt/oculus -p 80 "
 
 start() {
     [ -x $exec ] || exit 5
+    cd /opt/oculus
     echo -n $"Starting `basename $exec`: "
-    daemon "$exec -p ${pidfile}"
+    daemon "$exec ${param} start"
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
