@@ -7,7 +7,7 @@ cd ${LOCAL_PATH}
 Update=0
 #get the file list from squid log
 
-tail -500 /var/log/squid/access.log | grep -v "10.10.10.2" | awk '/rpm/ {NF=split($7,t,"/");print $7, t[NF] }' | while read url file_name
+tail -500 /var/log/squid/access.log | egrep -v '(%|10.10.10.2)' | awk '/rpm/ {NF=split($7,t,"/");print $7, t[NF] }' | while read url file_name
 do 
     if [ "x" != "${file_name}x" ]
     then 
