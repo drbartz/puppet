@@ -7,8 +7,8 @@ SKYLINE_GIT_SOURCE="https://github.com/drbartz/skyline -b devel"
 set HTTP_PROXY=http://10.10.10.2:3128
 export http_proxy=http://10.10.10.2:3128
 
-RUBY_PUPPET_VER=1.8.7
-RUBY_OCULUS_VER=1.9.2
+RUBY_PUPPET_VER='1.8.7-head'
+RUBY_OCULUS_VER='1.9.2-p330'
 ELASTICSEARCH_VER=0.90.3
 
 # clean and prepare temp dir
@@ -18,6 +18,7 @@ cd ${TMP_DIR}
 date >  ${OUTPUT_FILE}
 
 # install ruby RVM
+gem install rvm
 gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 curl -L get.rvm.io | bash -s stable
 source /etc/profile.d/rvm.sh
@@ -36,13 +37,27 @@ rvm install ${RUBY_PUPPET_VER}
 
 # prepare puppet env
 rvm use ${RUBY_PUPPET_VER}
+PATH=/usr/local/rvm/gems/ruby-${RUBY_PUPPET_VER}/bin:/usr/local/rvm/gems/ruby-${RUBY_PUPPET_VER}@global/bin:/usr/local/rvm/rubies/ruby-${RUBY_PUPPET_VER}/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
+GEM_HOME=/usr/local/rvm/gems/ruby-${RUBY_PUPPET_VER}
+IRBRC=/usr/local/rvm/rubies/ruby-${RUBY_PUPPET_VER}/.irbrc
+MY_RUBY_HOME=/usr/local/rvm/rubies/ruby-${RUBY_PUPPET_VER}
+GEM_PATH=/usr/local/rvm/gems/ruby-${RUBY_PUPPET_VER}:/usr/local/rvm/gems/ruby-${RUBY_PUPPET_VER}@global
+RUBY_VERSION=ruby-${RUBY_PUPPET_VER}
+
 gem install json
 
 #download oculus gig
 git clone https://github.com/etsy/oculus.git
 
 #elasticsearch install
-rmv use ${RUBY_OCULUS_VER}
+rvm use ${RUBY_OCULUS_VER}
+PATH=/usr/local/rvm/gems/ruby-${RUBY_OCULUS_VER}/bin:/usr/local/rvm/gems/ruby-${RUBY_OCULUS_VER}@global/bin:/usr/local/rvm/rubies/ruby-${RUBY_OCULUS_VER}/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
+GEM_HOME=/usr/local/rvm/gems/ruby-${RUBY_OCULUS_VER}
+IRBRC=/usr/local/rvm/rubies/ruby-${RUBY_OCULUS_VER}/.irbrc
+MY_RUBY_HOME=/usr/local/rvm/rubies/ruby-${RUBY_OCULUS_VER}
+GEM_PATH=/usr/local/rvm/gems/ruby-${RUBY_OCULUS_VER}:/usr/local/rvm/gems/ruby-${RUBY_OCULUS_VER}@global
+RUBY_VERSION=ruby-${RUBY_OCULUS_VER}
+
 
 ELASTICSEARCH_VER="0.90.3"
 wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${ELASTICSEARCH_VER}.tar.gz
