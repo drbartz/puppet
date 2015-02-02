@@ -2,7 +2,7 @@ class autocache {
     include squid
     include httpd
 
-    package {'yum-plugin-priorities':
+    package {['yum-plugin-priorities', 'createrepo']:
         ensure  => present,
     }
 
@@ -18,6 +18,15 @@ class autocache {
         group   => 'root',
         mode    => '0755',
         content => file('autocache/update.sh'),
+        require => File['/opt/autocache'],
+    }
+
+    file {'/opt/autocache/first_run.sh':
+        ensure  => present,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0755',
+        content => file('autocache/first_run.sh'),
         require => File['/opt/autocache'],
     }
 
@@ -40,4 +49,13 @@ class autocache {
         require     => File['/opt/autocache/update.sh'],
     }
 
+    exec { '/opt/autocache/first_run.sh':
+        cwd     => '/opt/autocache',
+        creates => '/opt/autocache/rpm-cache/repodata',
+        require => File['/opt/autocache/first_run.sh'],
+        notify  => [
+            Service['httpd'],
+            Service['squid'],
+        ],
+    }
 }
