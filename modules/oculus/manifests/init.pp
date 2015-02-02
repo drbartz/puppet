@@ -35,8 +35,8 @@ class oculus {
       mode   => '0755',
       owner   => 'root',
       group   => 'root',
-      notify    => Service['puppet'],
-      require   => Package['puppet'],
+      #notify    => Service['puppet'],
+      #require   => Package['puppet'],
    }
 
    file { '/opt/oculus/config/config.yml':

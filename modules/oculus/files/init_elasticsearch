@@ -8,20 +8,29 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-PATH=/usr/local/rvm/gems/ruby-1.9.2-p330/bin:/usr/local/rvm/gems/ruby-1.9.2-p330@global/bin:/usr/local/rvm/rubies/ruby-1.9.2-p330/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
-GEM_HOME=/usr/local/rvm/gems/ruby-1.9.2-p330
-IRBRC=/usr/local/rvm/rubies/ruby-1.9.2-p330/.irbrc
-MY_RUBY_HOME=/usr/local/rvm/rubies/ruby-1.9.2-p330
-GEM_PATH=/usr/local/rvm/gems/ruby-1.9.2-p330:/usr/local/rvm/gems/ruby-1.9.2-p330@global
 RUBY_VERSION=ruby-1.9.2-p330
+PATH=/usr/local/rvm/gems/${RUBY_VERSION}/bin:/usr/local/rvm/gems/${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/${RUBY_VERSION}/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
+GEM_HOME=/usr/local/rvm/gems/${RUBY_VERSION}
+IRBRC=/usr/local/rvm/rubies/${RUBY_VERSION}/.irbrc
+MY_RUBY_HOME=/usr/local/rvm/rubies/${RUBY_VERSION}
+GEM_PATH=/usr/local/rvm/gems/${RUBY_VERSION}:/usr/local/rvm/gems/${RUBY_VERSION}@global
 
-exec="/opt/elasticsearch-0.90.3/bin/elasticsearch"
+elastic_dir='/opt/elasticsearch-0.90.3'
+exec=${elastic_dir}"/bin/elasticsearch"
 pidfile="/var/run/elasticsearch.pid"
 lockfile="/var/lock/subsys/elasticsearch"
+plugin=${elastic_dir}"/elasticsearch-oculus-plugin/OculusPlugins.jar"
 
 start() {
     [ -x $exec ] || exit 5
     echo -n $"Starting `basename $exec`: "
+    if [ ! -f $plugin ]
+    then
+        cd /opt/elasticsearch-0.90.3/elasticsearch-oculus-plugin/
+        rake build >/dev/null
+        cp -a OculusPlugins.jar /opt/elasticsearch-0.90.0/lib/.
+    fi
+
     daemon "$exec -p ${pidfile}"
     retval=$?
     echo

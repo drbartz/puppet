@@ -10,14 +10,16 @@
 # processname: puppet
 # config: /etc/sysconfig/puppet
 
-PATH=/usr/local/rvm/gems/ruby-1.8.7-head/bin:/usr/local/rvm/gems/ruby-1.8.7-head@global/bin:/usr/local/rvm/rubies/ruby-1.8.7-head/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
-GEM_HOME=/usr/local/rvm/gems/ruby-1.8.7-head
-IRBRC=/usr/local/rvm/rubies/ruby-1.8.7-head/.irbrc
-MY_RUBY_HOME=/usr/local/rvm/rubies/ruby-1.8.7-head
-GEM_PATH=/usr/local/rvm/gems/ruby-1.8.7-head:/usr/local/rvm/gems/ruby-1.8.7-head@global
-RUBY_VERSION=ruby-1.8.7-head
-
-export PATH GEM_HOME IRBRC MY_RUBY_HOME GEM_PATH RUBY_VERSION
+if [ -d '/usr/local/rvm/gems/ruby-1.8.7-head/bin' ]
+then
+    RUBY_VERSION=ruby-1.8.7-head
+    PATH=/usr/local/rvm/gems/${RUBY_VERSION}/bin:/usr/local/rvm/gems/${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/${RUBY_VERSION}/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
+    GEM_HOME=/usr/local/rvm/gems/${RUBY_VERSION}
+    IRBRC=/usr/local/rvm/rubies/${RUBY_VERSION}/.irbrc
+    MY_RUBY_HOME=/usr/local/rvm/rubies/${RUBY_VERSION}
+    GEM_PATH=/usr/local/rvm/gems/${RUBY_VERSION}:/usr/local/rvm/gems/${RUBY_VERSION}@global
+    export PATH GEM_HOME IRBRC MY_RUBY_HOME GEM_PATH RUBY_VERSION
+fi
 
 [ -f /etc/sysconfig/puppet ] && . /etc/sysconfig/puppet
 lockfile=${LOCKFILE-/var/lock/subsys/puppet}
