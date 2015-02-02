@@ -16,7 +16,6 @@ RUBY_VERSION=ruby-1.9.2-p330
 
 export PATH GEM_HOME IRBRC MY_RUBY_HOME GEM_PATH RUBY_VERSION
 
-
 pidfile="/var/run/oculus/resque.pid"
 lockfile="/var/lock/subsys/thin"
 logfile="/var/log/oculus/resque_stdout"
