@@ -1,0 +1,153 @@
+#!/bin/sh
+#
+# thin-server  init file for starting up the oculus webserver daemon
+#
+# chkconfig:   - 20 80
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+PATH=/usr/local/rvm/gems/ruby-1.9.2-p330/bin:/usr/local/rvm/gems/ruby-1.9.2-p330@global/bin:/usr/local/rvm/rubies/ruby-1.9.2-p330/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
+GEM_HOME=/usr/local/rvm/gems/ruby-1.9.2-p330
+IRBRC=/usr/local/rvm/rubies/ruby-1.9.2-p330/.irbrc
+MY_RUBY_HOME=/usr/local/rvm/rubies/ruby-1.9.2-p330
+GEM_PATH=/usr/local/rvm/gems/ruby-1.9.2-p330:/usr/local/rvm/gems/ruby-1.9.2-p330@global
+RUBY_VERSION=ruby-1.9.2-p330
+
+export PATH GEM_HOME IRBRC MY_RUBY_HOME GEM_PATH RUBY_VERSION
+
+
+pidfile="/var/run/oculus/resque.pid"
+lockfile="/var/lock/subsys/thin"
+logfile="/var/log/oculus/resque_stdout"
+exec="/usr/local/rvm/gems/ruby-1.9.2-p330/bin/rake"
+param=" resque:start_workers"
+name="oculus"
+
+wait_start() {
+    rh_status_q
+    retval=$?
+    [ $retval -ne 0 ] && sleep 1
+
+}
+start() {
+    [ -x $exec ] || exit 5
+    cd /opt/oculus
+    echo -n $"Starting $name: "
+    daemon "$exec ${param} >> $logfile"
+    wait_start;wait_start;wait_start;wait_start
+    rh_status_q
+    retval=$?
+    if [ $retval -eq 0 ]
+    then
+        touch $lockfile
+        success
+        echo
+    fi
+    return $retval
+}
+
+try_stop() {
+    rh_status_q
+    retval=$?
+    if [ $retval -ne 1 ]
+    then
+        list=`cat $pidfile | sed 's/\,/ /g '`
+        kill $list 2> /dev/nul
+        sleep 1
+    fi
+}
+
+stop() {
+    echo -n $"Stopping $name: "
+    try_stop;try_stop;try_stop;try_stop;try_stop;try_stop;try_stop;try_stop
+    rh_status_q
+    retval=$?
+    if [ $retval -eq 1 ]
+    then
+        success
+        echo
+        [ -f $lockfile ] && rm -f $lockfile
+        [ -f $pidfile ] && rm -f $pidfile
+    fi
+    return $retval
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    stop
+    start
+}
+
+rh_status() {
+    #status -p $pidfile `basename $exec`
+    #status -p $pidfile
+    if [ -f $pidfile ]
+    then
+        list=`cat $pidfile | sed 's/\,/ /g'`
+        total_pid=0
+        pid_ok=0
+        for p in $list
+        do
+            total_pid=$(($total_pid + 1))
+            grep -vq ruby /proc/$p/cmdline 2> /dev/null && pid_ok=$(($pid_ok + 1))
+        done
+        # check if there is any pid running
+        if [ 0 -eq $pid_ok ]
+        then
+            echo "$name is stopped"
+            return 1
+        else
+            # check if process count is equal to the pid running
+            if [ $total_pid -eq $pid_ok ]
+            then
+                echo "$name is running"
+                return 0
+            else
+                echo "ERR: process running [$pid_ok] less then totall [$total_pid] process"
+                return 4
+            fi
+        fi
+    else
+        echo "$name is stopped"
+        return 1
+    fi
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q
+        retval=$?
+        [ 1 -eq $retval ] && exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    reload)
+        $1
+        ;;
+    status)
+        rh_status
+        ;;
+    condrestart|try-restart)
+        rh_status_q || exit 0
+        restart
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
+        exit 2
+esac
+exit $?
