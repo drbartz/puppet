@@ -27,6 +27,7 @@ done
 
 if [ ${Update} -eq 1 ]
 then
+    cd ${LOCAL_PATH}
     pushd ${LOCAL_PATH} >/dev/null 2>&1
     createrepo .
     popd
