@@ -198,6 +198,15 @@ class graphite::server_git {
 		require	=> Exec['/opt/graphite/install_graphite.sh'],
 	}
 
+   file { '/etc/logrotate.d/carbon':
+        ensure    => present,
+        content   => file('graphite/logrotate_carbon'),
+        mode      => '0644',
+        owner     => 'root',
+        group     => 'root',
+        require	=> Exec['/opt/graphite/install_graphite.sh'],
+    }
+
 	service { 'iptables':
 		ensure	=> running,
 		enable	=> true,

@@ -1,0 +1,15 @@
+/var/log/carbon/*log {
+    size 1M
+    rotate 20
+    missingok
+    notifempty
+    sharedscripts
+    compress
+    delaycompress
+    create 644 carbon carbon
+    postrotate
+        service carbon-cache restart > /dev/null 2>/dev/null || true
+        service carbon-aggregator restart > /dev/null 2>/dev/null || true
+        service carbon-relay restart > /dev/null 2>/dev/null || true
+    endscript
+}

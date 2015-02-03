@@ -75,6 +75,15 @@ class oculus {
         require => Exec['/tmp/.install_oculus.sh'],
    }
 
+   file { '/etc/init.d/oculus':
+        ensure  => present,
+        content => file('oculus/init_oculus'),
+        mode    => '0755',
+        owner   => 'root',
+        group   => 'root',
+        require => Exec['/tmp/.install_oculus.sh'],
+   }
+
    file { '/etc/init.d/thin':
         ensure  => present,
         content => file('oculus/init_thin'),
@@ -142,5 +151,11 @@ class oculus {
       ensure   => running,
       enable   => true,
       require   => File['/etc/init.d/thin'],
+   }
+   
+   service { 'oculus':
+      ensure   => running,
+      enable   => true,
+      require   => File['/etc/init.d/oculus'],
    }
 }
