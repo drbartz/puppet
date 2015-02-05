@@ -26,9 +26,9 @@ start() {
     echo -n $"Starting `basename $exec`: "
     if [ ! -f $plugin ]
     then
-        cd /opt/elasticsearch-0.90.3/elasticsearch-oculus-plugin/
+        cd ${elastic_dir}/elasticsearch-oculus-plugin/
         rake build >/dev/null
-        cp -a OculusPlugins.jar /opt/elasticsearch-0.90.0/lib/.
+        cp -a OculusPlugins.jar ../lib/.
     fi
 
     daemon "$exec -p ${pidfile}"
@@ -40,7 +40,6 @@ start() {
 
 stop() {
     echo -n $"Stopping `basename $exec`: "
-    #killproc -p $pidfile `basename $exec`
     killproc -p $pidfile
     retval=$?
     echo
@@ -59,7 +58,6 @@ reload() {
 }
 
 rh_status() {
-    #status -p $pidfile `basename $exec`
     status -p $pidfile 
 }
 

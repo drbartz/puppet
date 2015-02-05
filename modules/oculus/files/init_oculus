@@ -7,19 +7,19 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-PATH=/usr/local/rvm/gems/ruby-1.9.2-p330/bin:/usr/local/rvm/gems/ruby-1.9.2-p330@global/bin:/usr/local/rvm/rubies/ruby-1.9.2-p330/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
-GEM_HOME=/usr/local/rvm/gems/ruby-1.9.2-p330
-IRBRC=/usr/local/rvm/rubies/ruby-1.9.2-p330/.irbrc
-MY_RUBY_HOME=/usr/local/rvm/rubies/ruby-1.9.2-p330
-GEM_PATH=/usr/local/rvm/gems/ruby-1.9.2-p330:/usr/local/rvm/gems/ruby-1.9.2-p330@global
 RUBY_VERSION=ruby-1.9.2-p330
+PATH=/usr/local/rvm/gems/${RUBY_VERSION}/bin:/usr/local/rvm/gems/${RUBY_VERSION}@global/bin:/usr/local/rvm/rubies/${RUBY_VERSION}/bin:/usr/local/rvm/bin:/usr/bin:/sbin:/bin:/usr/sbin
+GEM_HOME=/usr/local/rvm/gems/${RUBY_VERSION}
+IRBRC=/usr/local/rvm/rubies/${RUBY_VERSION}/.irbrc
+MY_RUBY_HOME=/usr/local/rvm/rubies/${RUBY_VERSION}
+GEM_PATH=/usr/local/rvm/gems/${RUBY_VERSION}:/usr/local/rvm/gems/${RUBY_VERSION}@global
 
 export PATH GEM_HOME IRBRC MY_RUBY_HOME GEM_PATH RUBY_VERSION
 
 pidfile="/var/run/oculus/resque.pid"
 lockfile="/var/lock/subsys/thin"
 logfile="/var/log/oculus/resque_stdout"
-exec="/usr/local/rvm/gems/ruby-1.9.2-p330/bin/rake"
+exec="/usr/local/rvm/gems/${RUBY_VERSION}/bin/rake"
 param=" resque:start_workers"
 name="oculus"
 
