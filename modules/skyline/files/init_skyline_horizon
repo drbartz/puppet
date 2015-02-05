@@ -26,6 +26,7 @@ stop() {
     echo -n $"Stopping `basename $exec`: "
     killproc -p $pidfile `basename $exec`
     retval=$?
+    while [ `netstat -an | grep -c ":2024"` -gt 0 ]; do sleep 1;done
     echo
     [ $retval -eq 0 ] && rm -f $lockfile
     return $retval
