@@ -48,7 +48,7 @@ CARBON_PORT = 2013
 # webapp. Include http://. If you don't want to use Oculus, set this to an
 # empty string. If you comment this out, Skyline won't work! Speed improvements
 # will occur when Oculus support is disabled.
-OCULUS_HOST = 'http://your_oculus_host.com'
+OCULUS_HOST = 'http://10.10.10.7'
 
 """
 Analyzer settings
@@ -168,7 +168,7 @@ Horizon settings
 """
 # This is the number of worker processes that will consume from the Horizon
 # queue.
-WORKER_PROCESSES = 2
+WORKER_PROCESSES = 4
 
 # The IP address for Horizon to listen on.  Defaults to gethostname()
 HORIZON_IP = '10.10.10.6'
