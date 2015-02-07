@@ -1,36 +1,44 @@
 #!/bin/sh
 #
-# carbon-cache  init file for starting up the carbon-cache daemon
+# carbon-relay init file for starting up the carbon-relay daemon
 #
 # chkconfig:   - 20 80
-# description: Starts and stops the carbon-cache daemon.
+# description: Starts and stops the carbon-relay daemon.
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-exec="/opt/graphite/bin/carbon-relay.py"
+carbon_name="relay"
+exec="/opt/graphite/bin/carbon-${carbon_name}.py"
 
 CONFIG="/opt/graphite/conf/carbon.conf"
 
 LOG_DIR=`egrep '^LOG_DIR.*=' /opt/graphite/conf/carbon.conf | awk '{print $NF}'`
-[[ ${LOG_DIR} == "" ]] && LOG_DIR="/opt/graphite/storage/log/carbon-relay"
+[[ ${LOG_DIR} == "" ]] && LOG_DIR="/opt/graphite/storage/log/carbon-${carbon_name}"
 
-lockfile="/var/lock/subsys/carbon-relay"
-pidfile="/var/run/carbon-relay.pid"
+lockfile="/var/lock/subsys/carbon-${carbon_name}"
+pidfile="/var/run/carbon-${carbon_name}.pid"
 
 start() {
     [ -f $CONFIG ] || exit 6
     [ -x $exec ] || exit 5
-    status -p $pidfile `basename $exec`
+    [ "" == ${1} ] && instance="a" || instance=${1}
+    pidfile="/var/run/carbon-${carbon_name}-${instance}.pid"
+    lockfile="/var/lock/subsys/carbon-${carbon_name}-${instance}"
+    status -p ${pidfile} `basename $exec`
     echo -n $"Starting `basename $exec`: "
-    daemon "$exec --config=$CONFIG --pidfile=$pidfile --logdir=$LOG_DIR start"
+    daemon "$exec --instance=${instance} --config=$CONFIG --pidfile=$pidfile --logdir=$LOG_DIR start"
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
     return $retval
+
 }
 
 stop() {
+    [ "" == ${1} ] && instance="a" || instance=${1}
+    pidfile="/var/run/carbon-${carbon_name}-${instance}.pid"
+    lockfile="/var/lock/subsys/carbon-${carbon_name}-${instance}"
     echo -n $"Stopping `basename $exec`: "
     killproc -p $pidfile `basename $exec`
     retval=$?
@@ -50,21 +58,29 @@ reload() {
 }
 
 rh_status() {
-    status -p $pidfile `basename $exec`
+    [ "" == ${1} ] && instance="a" || instance=${1}
+    pidfile="/var/run/carbon-${carbon_name}-${instance}.pid"
+    lockfile="/var/lock/subsys/carbon-${carbon_name}-${instance}"
+    status -p $pidfile `basename $exec`" instance-${instance}"
 }
 
 rh_status_q() {
-    rh_status >/dev/null 2>&1
+	[ "" == ${1} ] && instance="a" || instance=${1}
+    rh_status ${instance} >/dev/null 2>&1
 }
 
 case "$1" in
     start)
-        rh_status_q && exit 0
-        $1
+        rh_status_q a && exit 0
+        $1 a
+        rh_status_q b && exit 0
+        $1 b
         ;;
     stop)
-        rh_status_q || exit 0
-        $1
+        rh_status_q a || exit 0
+        $1 a
+        rh_status_q b || exit 0
+        $1 b
         ;;
     restart)
         $1
@@ -73,10 +89,12 @@ case "$1" in
         $1
         ;;
     status)
-        rh_status
+        rh_status a
+        rh_status b
         ;;
     condrestart|try-restart)
-        rh_status_q || exit 0
+        rh_status_q a || exit 0
+        rh_status_q b || exit 0
         restart
         ;;
     *)
