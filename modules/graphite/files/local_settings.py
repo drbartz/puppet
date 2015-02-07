@@ -202,7 +202,7 @@ DATABASES = {
 # and a common scheme is to use 7102 for instance b, 7202 for instance c, etc.
 #
 # You *should* use 127.0.0.1 here in most cases
-CARBONLINK_HOSTS = ["127.0.0.1:7002:a", "127.0.0.1:7102:b"]
+CARBONLINK_HOSTS = ["127.0.0.1:7102:a", "127.0.0.1:7202:b", "127.0.0.1:7302:c", "127.0.0.1:7402:d"]
 CARBONLINK_TIMEOUT = 1.0
 
 #####################################

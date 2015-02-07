@@ -42,7 +42,7 @@ GRAPH_URL = 'http://' + GRAPHITE_HOST + '/render/?width=1400&from=-1hour&target=
 GRAPHITE_PREFIX = 'srv.tools'
 
 # If you have a Graphite host set up, set its Carbon port.
-CARBON_PORT = 2013
+CARBON_PORT = 2003
 
 # If you have Oculus set up, set this metric to set the clickthrough on the
 # webapp. Include http://. If you don't want to use Oculus, set this to an
