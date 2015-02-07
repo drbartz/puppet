@@ -179,9 +179,7 @@ class graphite::server_git {
 		owner     => 'carbon',
 		group     => 'carbon',
 		notify	 => [
-			Service['carbon-cache'],
 			Service['carbon-relay'],
-			Service['carbon-aggregator'],
 		],
 		require	=> Exec['/opt/graphite/install_graphite.sh'],
 	}
