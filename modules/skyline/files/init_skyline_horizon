@@ -14,6 +14,7 @@ lockfile="/var/lock/subsys/skyline-horizon"
 
 start() {
     [ -x $exec ] || exit 5
+    [ `netstat -an | grep -c ":2024"` -gt 0 ] && exit 5
     echo -n $"Starting `basename $exec`: "
     daemon "$exec start"
     retval=$?
