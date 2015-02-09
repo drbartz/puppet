@@ -73,6 +73,13 @@ class redis {
 		notify  => Service['redis'],
 	}
 
+    file {'/etc/diamond/configs/redis.conf':
+        ensure  => present,
+		content => file('redis/diamond_redis.conf'),
+        require => File['/etc/diamond/configs'],
+        notify  => Service['diamond'],
+    }
+
 	service { 'redis':
 		ensure	=> running,
 		enable	=> true,

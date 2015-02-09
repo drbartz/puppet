@@ -26,6 +26,20 @@ class httpd {
             User['apache'],
         ],
     }
+    
+    file {'/etc/httpd/conf.d/server-status.conf':
+        ensure  => present,
+        content => file('httpd/server-status.conf'),
+        require => Package['httpd'],
+        notify  => Service['httpd'],
+    }
+
+    file {'/etc/diamond/configs/httpd.conf':
+        ensure  => present,
+        content => file('httpd/diamond_httpd.conf'),
+        require => File['/etc/diamond/configs'],
+        notify  => Service['diamond'],
+    }
 
     service { 'httpd':
         ensure      => running,
