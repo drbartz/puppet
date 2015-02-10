@@ -5,5 +5,5 @@ node 'puppet' {
     include puppet::server
     #include zabbix::agent
     include graphite::diamond
-    Class['puppet::client'] -> Class['basic'] -> Class['graphite::diamond'] -> Class['puppet::server'] -> Class['puppet::client_fast']
+    Class['puppet::client'] -> Class['basic'] -> Class['puppet::server'] -> Class['puppet::client_fast']
 }

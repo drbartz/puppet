@@ -30,8 +30,10 @@ class squid {
     file {'/etc/diamond/configs/squid.conf':
         ensure  => present,
         content => file('squid/diamond_squid.conf'),
-        require => File['/etc/diamond/configs'],
-        notify  => Service['diamond'],
+        require => [
+            Class['graphite::diamond'],
+        ],
+        #notify  => Service['diamond'],
     }
 
     service { 'squid':

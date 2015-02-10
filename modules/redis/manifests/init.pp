@@ -76,7 +76,10 @@ class redis {
     file {'/etc/diamond/configs/redis.conf':
         ensure  => present,
 		content => file('redis/diamond_redis.conf'),
-        require => File['/etc/diamond/configs'],
+        require => [
+            File['/etc/diamond/configs'],
+            Class['graphite::diamond'],
+        ],
         notify  => Service['diamond'],
     }
 

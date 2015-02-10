@@ -37,8 +37,10 @@ class httpd {
     file {'/etc/diamond/configs/httpd.conf':
         ensure  => present,
         content => file('httpd/diamond_httpd.conf'),
-        require => File['/etc/diamond/configs'],
-        notify  => Service['diamond'],
+        require => [
+            Class['graphite::diamond'],
+            ],
+        #notify  => Service['diamond'],
     }
 
     service { 'httpd':
