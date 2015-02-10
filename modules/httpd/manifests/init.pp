@@ -1,4 +1,6 @@
 class httpd {
+    
+    include graphite::diamond
 
     group { 'apache':
         ensure => present,
@@ -37,10 +39,8 @@ class httpd {
     file {'/etc/diamond/configs/httpd.conf':
         ensure  => present,
         content => file('httpd/diamond_httpd.conf'),
-        require => [
-            Class['graphite::diamond'],
-            ],
-        #notify  => Service['diamond'],
+        require => Exec['/tmp/.install_diamond.sh'],
+        notify  => Service['diamond'],
     }
 
     service { 'httpd':

@@ -46,6 +46,7 @@ class graphite::diamond {
         mode      => '0755',
         owner     => 'root',
         group     => 'root',
+        require => Exec['/tmp/.install_diamond.sh'],
         notify  => Service['diamond'],
     }
 
