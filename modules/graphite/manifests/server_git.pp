@@ -38,11 +38,6 @@ class graphite::server_git {
         group     => 'carbon',
     }
 
-    file { '/root/test':
-        ensure  => present,
-        content => template('graphite/carbon.conf.erb'),
-    }
-
     file { '/opt/graphite':
         ensure    => directory,
         mode      => '0644',
