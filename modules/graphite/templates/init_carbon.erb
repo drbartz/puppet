@@ -1,14 +1,20 @@
 #!/bin/sh
+################################################################################
+# FILE GENERATE BY PUPPET TEMPLATE:
 #
-# carbon-cache  init file for starting up the carbon-cache daemon
+#     Changes will should be done at puppet server
+#
+##################################################################################
+#
+# init file for starting up the carbon-<%= @carbon_name %> daemon
 #
 # chkconfig:   - 20 80
-# description: Starts and stops the carbon-cache daemon.
+# description: Starts, stops and restart the carbon-<%= @carbon_name %> daemon.
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-carbon_name="cache"
+carbon_name="<%= @carbon_name %>"
 exec="/opt/graphite/bin/carbon-${carbon_name}.py"
 
 CONFIG="/opt/graphite/conf/carbon.conf"
