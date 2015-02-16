@@ -1,4 +1,5 @@
 class puppet::client {
+    include puppet::client_fast
 	file {'/etc/puppet/puppet.conf':
 		ensure => present,
 		content   => file('puppet/puppet.conf'),

@@ -1,7 +1,8 @@
 node /skyline.*/ {
-	include basic
-	include puppet::client
-	include redis
-	include graphite::collect
-	#include zabbix::agent 			#discoment if you have the Zabbix server installed
+    include basic
+    include graphite::diamond
+    include puppet::client
+    #include zabbix::agent
+    include skyline
+    Class['puppet::client'] -> Class['basic'] -> Class['graphite::diamond'] -> Class['skyline']
 }

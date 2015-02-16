@@ -1,29 +1,27 @@
 #!/bin/sh
 #
-# carbon-cache  init file for starting up the carbon-cache daemon
+# redis        init file for starting up the redis daemon
 #
 # chkconfig:   - 20 80
-# description: Starts and stops the carbon-cache daemon.
+# description: Starts and stops the redis daemon.
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-exec="/opt/graphite/bin/carbon-aggregator.py"
+name="redis-server"
+exec="/usr/local/bin/$name"
+pidfile="/var/run/redis/redis.pid"
+REDIS_CONFIG="/etc/redis.conf"
 
-CONFIG="/opt/graphite/conf/carbon.conf"
+[ -e /etc/sysconfig/redis ] && . /etc/sysconfig/redis
 
-LOG_DIR=`egrep '^LOG_DIR.*=' /opt/graphite/conf/carbon.conf | awk '{print $NF}'`
-[[ ${LOG_DIR} == "" ]] && LOG_DIR="/opt/graphite/storage/log/carbon-aggregator"
-
-lockfile="/var/lock/subsys/carbon-aggregator"
-pidfile="/var/run/carbon-aggregator.pid"
+lockfile=/var/lock/subsys/redis
 
 start() {
-    [ -f $CONFIG ] || exit 6
+    [ -f $REDIS_CONFIG ] || exit 6
     [ -x $exec ] || exit 5
-    status -p $pidfile `basename $exec`
-    echo -n $"Starting `basename $exec`: "
-    daemon "$exec --config=$CONFIG --pidfile=$pidfile --logdir=$LOG_DIR start"
+    echo -n $"Starting $name: "
+    daemon --user ${REDIS_USER-redis} "$exec $REDIS_CONFIG"
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
@@ -31,8 +29,8 @@ start() {
 }
 
 stop() {
-    echo -n $"Stopping `basename $exec`: "
-    killproc -p $pidfile `basename $exec`
+    echo -n $"Stopping $name: "
+    killproc -p $pidfile $name
     retval=$?
     echo
     [ $retval -eq 0 ] && rm -f $lockfile
@@ -45,17 +43,17 @@ restart() {
 }
 
 reload() {
-    stop
-    start
+    false
 }
 
 rh_status() {
-    status -p $pidfile `basename $exec`
+    status -p $pidfile $name
 }
 
 rh_status_q() {
     rh_status >/dev/null 2>&1
 }
+
 
 case "$1" in
     start)
@@ -70,7 +68,11 @@ case "$1" in
         $1
         ;;
     reload)
+        rh_status_q || exit 7
         $1
+        ;;
+    force-reload)
+        force_reload
         ;;
     status)
         rh_status

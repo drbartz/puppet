@@ -1,29 +1,21 @@
 #!/bin/sh
 #
-# carbon-cache  init file for starting up the carbon-cache daemon
+# skyline-analyzer  init file for starting up the skyline-analyzer daemon
 #
 # chkconfig:   - 20 80
-# description: Starts and stops the carbon-cache daemon.
+# description: Starts and stops the skyline-analyzer daemon.
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-exec="/opt/graphite/bin/carbon-relay.py"
-
-CONFIG="/opt/graphite/conf/carbon.conf"
-
-LOG_DIR=`egrep '^LOG_DIR.*=' /opt/graphite/conf/carbon.conf | awk '{print $NF}'`
-[[ ${LOG_DIR} == "" ]] && LOG_DIR="/opt/graphite/storage/log/carbon-relay"
-
-lockfile="/var/lock/subsys/carbon-relay"
-pidfile="/var/run/carbon-relay.pid"
+exec="/opt/skyline/bin/analyzer.d"
+pidfile="/var/run/skyline/analyzer.pid"
+lockfile=/var/lock/subsys/skyline-analyzer
 
 start() {
-    [ -f $CONFIG ] || exit 6
     [ -x $exec ] || exit 5
-    status -p $pidfile `basename $exec`
     echo -n $"Starting `basename $exec`: "
-    daemon "$exec --config=$CONFIG --pidfile=$pidfile --logdir=$LOG_DIR start"
+    daemon "$exec start"
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile

@@ -1,0 +1,22 @@
+results_explain: 0
+elasticsearch:
+  servers:
+     - "http://127.0.0.1:9200"
+#     - "http://oculussearch02:9200"
+  index: "metrics"
+  timeout: 30
+  phrase_slop: 20
+  scorers:
+    dtw:
+      radius: 5
+      scale_points: 25
+    euclidian:
+      scale_points: 25
+skyline:
+  host: "10.10.10.6"
+  port: 6379
+  listener_port: 2024
+  metric_prefix: "mini"
+redis:
+  host: "127.0.0.1"
+  port: 6379

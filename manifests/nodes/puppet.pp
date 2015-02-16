@@ -1,7 +1,9 @@
 node 'puppet' {
-	include basic
-	include puppet::client
-	include puppet::server
-	#include graphite::collect 	#discoment if you have the Graphite server installed
-	#include zabbix::agent 			#discoment if you have the Zabbix server installed
+    include basic
+    include puppet::client
+    include puppet::client_fast
+    include puppet::server
+    #include zabbix::agent
+    include graphite::diamond
+    Class['puppet::client'] -> Class['basic'] -> Class['puppet::server'] -> Class['puppet::client_fast']
 }

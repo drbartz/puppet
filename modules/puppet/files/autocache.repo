@@ -1,0 +1,9 @@
+# Created by Mateus - Jan/2015
+
+[autocache]
+name=autocache
+baseurl=http://10.10.10.2/autocache/
+enabled=1
+gpgcheck=0
+priority=1
+

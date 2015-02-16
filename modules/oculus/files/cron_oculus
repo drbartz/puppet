@@ -1,0 +1,2 @@
+# Script that imports data from Skyline into search indexes every 2 minutes
+*/2 * * * * root /opt/oculus/scripts/import.sh
