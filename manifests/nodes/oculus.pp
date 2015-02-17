@@ -4,5 +4,6 @@ node /oculus.*/ {
     #include zabbix::agent
     include graphite::diamond
     include oculus
+    include redis
     Class['puppet::client'] -> Class['basic'] -> Class['graphite::diamond'] -> Class['oculus']
 }

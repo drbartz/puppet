@@ -1,6 +1,4 @@
 class autocache {
-    include squid
-    include httpd
 
     package {['yum-plugin-priorities', 'createrepo']:
         ensure  => present,

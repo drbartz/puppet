@@ -4,5 +4,6 @@ node /skyline.*/ {
     include puppet::client
     #include zabbix::agent
     include skyline
+    include redis
     Class['puppet::client'] -> Class['basic'] -> Class['graphite::diamond'] -> Class['skyline']
 }

@@ -1,5 +1,4 @@
 class skyline {
-	include redis
 	package { ['python-pip', 'gcc', 'python-devel', 'gcc-c++', 'lapack', 'lapack-devel', 'blas', 'blas-devel']: 
 		ensure	=> present,
 		require	=> Package['epel-release'],

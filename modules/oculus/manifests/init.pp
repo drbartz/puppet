@@ -1,7 +1,5 @@
 class oculus {
 
-   include redis
-
     package{['gcc-c++', 'patch', 'readline', 'readline-devel', 'zlib', 'zlib-devel', 'libyaml-devel', 'libffi-devel', 'openssl-devel', 'make', 'bzip2', 'autoconf', 'automake', 'libtool', 'bison', 'java-1.8.0-openjdk', 'java-1.8.0-openjdk-devel', 'ruby-devel', 'libxml2-devel', 'libxslt-devel']:
       ensure   => present,
       require   => Package['epel-release'],

@@ -1,7 +1,5 @@
 class httpd {
     
-    include graphite::diamond
-
     group { 'apache':
         ensure => present,
     }
