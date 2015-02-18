@@ -141,7 +141,7 @@ class graphite::server_git {
 
    file { '/opt/graphite/conf/carbon.conf':
         ensure    => present,
-        content   => file('graphite/carbon.conf'),
+        content   => template('graphite/carbon.conf.erb'),
         mode      => '0644',
         owner     => 'carbon',
         group     => 'carbon',
