@@ -1,0 +1,5 @@
+cluster.name: elasticsearch
+node.name: "Tools 01"
+node.master: true
+node.data: true
+http.cors.enabled: true

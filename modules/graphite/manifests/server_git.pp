@@ -77,6 +77,16 @@ class graphite::server_git {
         notify     => Service['httpd'],
     }
 
+       file { '/etc/httpd/conf.d/grafana.conf':
+        ensure    => present,
+        content   => file('graphite/http_grafana.conf'),
+        mode      => '0644',
+        owner     => 'root',
+        group     => 'root',
+        require    => Package['httpd'],
+        notify     => Service['httpd'],
+    }
+
    file { '/etc/sysconfig/iptables':
         ensure    => present,
         content   => file('graphite/iptables'),
