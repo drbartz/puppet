@@ -16,7 +16,7 @@ do
             #echo "file exist: ${file_name}"
             OK=1
         else   
-            echo "download file: ${file_name}"
+            echo "`date` download file: ${file_name}"
             wget -e use_proxy=yes -e http_proxy=10.10.10.2:3128 $url
             Update=1
         fi
