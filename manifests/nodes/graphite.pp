@@ -4,6 +4,8 @@ node /graphite01.*/ {
     include puppet::client
     include graphite::server_git
     include graphite::diamond
+    include elasticsearch
+    include grafana
     #include zabbix::agent
     Class['puppet::client'] -> Class['basic'] -> Class['graphite::server_git'] 
 }
