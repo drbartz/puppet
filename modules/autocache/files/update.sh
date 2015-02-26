@@ -17,7 +17,7 @@ do
             OK=1
         else   
             echo "`date` download file: ${file_name}"
-            wget -e use_proxy=yes -e http_proxy=10.10.10.2:3128 $url
+            wget -e use_proxy=yes -e http_proxy=10.10.10.2:3128 $url > /dev/null 2> /dev/null
             Update=1
         fi
     fi
