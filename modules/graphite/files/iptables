@@ -32,7 +32,7 @@
 # ???
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 # Elasticsearch
--A INPUT -m state --state NEW -m tcp -p tcp --dport 9200 -j ACCEPT
+-A INPUT -m tcp -p tcp --dport 9200:9400 -j ACCEPT
 # Zabbix
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 10050 -j ACCEPT
 # corosync test

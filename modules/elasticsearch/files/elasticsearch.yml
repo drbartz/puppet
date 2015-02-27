@@ -29,7 +29,7 @@
 # Cluster name identifies your cluster for auto-discovery. If you're running
 # multiple clusters on the same network, make sure you're using unique names.
 #
-#cluster.name: elasticsearch
+#cluster.name: grafana
 
 
 #################################### Node #####################################
@@ -44,11 +44,11 @@
 #
 # Allow this node to be eligible as a master node (enabled by default):
 #
-#node.master: true
+node.master: true
 #
 # Allow this node to store data (enabled by default):
 #
-#node.data: true
+node.data: true
 
 # You can exploit these settings to design advanced cluster topologies.
 #
@@ -209,7 +209,7 @@
 
 # Set both 'bind_host' and 'publish_host':
 #
-#network.host: 192.168.0.1
+#network.host: _eth1_
 
 # Set a custom port for the node to node communication (9300 by default):
 #
@@ -318,12 +318,12 @@
 #
 # 1. Disable multicast discovery (enabled by default):
 #
-#discovery.zen.ping.multicast.enabled: false
+discovery.zen.ping.multicast.enabled: true
 #
 # 2. Configure an initial list of master nodes in the cluster
 #    to perform discovery when new nodes (master or data) are started:
 #
-#discovery.zen.ping.unicast.hosts: ["host1", "host2:port"]
+discovery.zen.ping.unicast.hosts: ["10.10.10.3:9200", "10.10.10.4:9200"]
 
 # EC2 discovery allows to use AWS EC2 API in order to perform discovery.
 #
