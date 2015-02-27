@@ -11,7 +11,7 @@ then
 	install -d ${build_dir}
 	cd ${build_dir}
     # Install ElasticSearch RPM
-    rpm -Uvh https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.3.noarch.rpm
+    rpm -Uvh https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.noarch.rpm
     # Install Java
     cd /opt
     wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.tar.gz"

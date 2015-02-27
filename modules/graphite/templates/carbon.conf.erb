@@ -297,7 +297,7 @@ USE_FLOW_CONTROL = True
 LINE_RECEIVER_PORT = 2013
 PICKLE_RECEIVER_PORT = 2014
 RELAY_METHOD = consistent-hashing
-REPLICATION_FACTOR = 1
+REPLICATION_FACTOR = 2
 DESTINATIONS = <%= @graphite01 %>:2114:a, <%= @graphite01 %>:2214:b, <%= @graphite01 %>:2314:c, <%= @graphite01 %>:2414:d, <%= @graphite02 %>:2114:a, <%= @graphite02 %>:2214:b, <%= @graphite02 %>:2314:c, <%= @graphite02 %>:2414:d
 
 [aggregator]

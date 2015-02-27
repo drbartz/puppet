@@ -4,6 +4,9 @@
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
+# Elasticsearch
+-A INPUT -m pkttype --pkt-type multicast -j ACCEPT 
+
 -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 -A INPUT -p icmp -j ACCEPT
 -A INPUT -i lo -j ACCEPT
@@ -29,10 +32,12 @@
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 7402 -j ACCEPT
 # grafana2
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 3000 -j ACCEPT
+# kibana
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 5601 -j ACCEPT
 # ???
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 # Elasticsearch
--A INPUT -m tcp -p tcp --dport 9200:9400 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9200:9400 -j ACCEPT
 # Zabbix
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 10050 -j ACCEPT
 # corosync test
