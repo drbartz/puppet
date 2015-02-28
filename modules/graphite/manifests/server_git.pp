@@ -71,7 +71,7 @@ class graphite::server_git {
 
    file { '/etc/httpd/conf.d/graphite.conf':
         ensure    => present,
-        content   => file('graphite/http_graphite.conf'),
+        content   => template('graphite/http_graphite.conf.erb'),
         mode      => '0644',
         owner     => 'root',
         group     => 'root',
