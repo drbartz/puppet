@@ -7,5 +7,6 @@ node /zabbix*/ {
     include zabbix::agent
     include zabbix::server
     include graphite::diamond
+    include rsyslog
     Class['puppet::client'] -> Class['basic'] -> Class['graphite::diamond'] -> Class['mysqld'] 
 }

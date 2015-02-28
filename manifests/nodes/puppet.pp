@@ -8,5 +8,6 @@ node 'puppet' {
     include autocache
     include httpd
     include squid
+    include rsyslog
     Class['puppet::client'] -> Class['basic'] -> Class['puppet::server'] -> Class['puppet::client_fast']
 }

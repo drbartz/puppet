@@ -6,6 +6,7 @@ node /graphite0.*/ {
     include graphite::diamond
     include elasticsearch
     include grafana
+    include rsyslog
     #include zabbix::agent
     Class['puppet::client'] -> Class['basic'] -> Class['graphite::server_git'] 
 }

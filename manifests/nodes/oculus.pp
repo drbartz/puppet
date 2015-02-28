@@ -5,5 +5,6 @@ node /oculus.*/ {
     include graphite::diamond
     include oculus
     include redis
+    include rsyslog
     Class['puppet::client'] -> Class['basic'] -> Class['graphite::diamond'] -> Class['oculus']
 }

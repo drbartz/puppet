@@ -37,7 +37,7 @@
 # Node names are generated dynamically on startup, so you're relieved
 # from configuring them manually. You can tie this node to a specific name:
 #
-#node.name: "Franz Kafka"
+node.name: ${HOSTNAME}
 
 # Every node can be configured to allow or deny being eligible as the master,
 # and to allow or deny to store the data.
@@ -200,7 +200,7 @@ node.data: true
 
 # Set the bind address specifically (IPv4 or IPv6):
 #
-#network.bind_host: _[eth2]_
+#network.bind_host: _eth1:ipv4_
 
 # Set the address other nodes will use to communicate with this node. If not
 # set, it is automatically derived. It must point to an actual IP address.
