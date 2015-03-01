@@ -8,7 +8,8 @@ WSGISocketPrefix run/wsgi
         ServerName <%= @hostname %>
         DocumentRoot "/opt/graphite/webapp"
         ErrorLog /var/log/httpd/error.log
-        CustomLog /var/log/httpd/access.log common
+        #CustomLog /var/log/httpd/access.log common
+        CustomLog /var/log/httpd/access.log combined
 
         Header set Access-Control-Allow-Origin "*"
         Header set Access-Control-Allow-Methods "GET, OPTIONS"
