@@ -1,0 +1,6 @@
+## YAML Template.
+---
+zabbix::agent::enableremotecommands: '1'
+mateus::test: 'hiera puppet.hi.inet true'
+mateus::teste: 'hiera puppet.hi.inet true'
+puppet::server::mateus_teste2: 'auto hiera puppet.hi.inet true'

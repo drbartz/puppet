@@ -1,0 +1,18 @@
+:backends:
+  - yaml
+  - json
+:yaml:
+#  :datadir:  /etc/puppet/%{::environment}/hieradata/
+  :datadir:  /etc/puppet/hieradata/
+# the nodes/development, etc stuff is required by M2M
+:hierarchy:
+  - nodes/%{::clientcert}
+  - nodes/development/%{::clientcert}
+  - nodes/preproduction/%{::clientcert}
+  - nodes/production/%{::clientcert}
+  - nodes/%{::environment}/%{::clientcert}
+  - nodes/%{::tier}/%{::clientcert}
+  - environments/%{::tier}
+  - environments/%{::environment}
+  - common
+  - default

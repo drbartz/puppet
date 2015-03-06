@@ -1,0 +1,5 @@
+## YAML Template.
+---
+zabbix::agent::enableremotecommands: '1'
+mateus::test: 'hiera common true'
+mateus::teste: 'hiera common true'

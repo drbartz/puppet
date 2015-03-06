@@ -1,4 +1,4 @@
-node 'puppet' {
+node /puppet.*/ {
     include basic
     include puppet::client
     include puppet::client_fast
@@ -8,6 +8,6 @@ node 'puppet' {
     include autocache
     include httpd
     include squid
-    include logstash::forwarder
+    #include logstash::forwarder
     Class['puppet::client'] -> Class['basic'] -> Class['puppet::server'] -> Class['puppet::client_fast']
 }
