@@ -1,5 +1,6 @@
 ## YAML Template.
 ---
 zabbix::agent::enableremotecommands: '1'
-mateus::test: 'hiera common true'
-mateus::teste: 'hiera common true'
+graphite::server::skyline01: '10.10.10.6'
+graphite::server::graphite01: '10.10.10.3'
+graphite::server::graphite02: '10.10.10.4'
