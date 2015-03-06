@@ -1,0 +1,103 @@
+#!/bin/sh
+#
+#   /etc/init.d/logstash-forwarder
+#
+#   Starts and stops Lumberjack as a "daemon".
+#
+# chkconfig: 2345 30 70
+# description: Starts and stops Lumberjack as a daemon.
+ 
+# The name of this service
+NAME="logstash-forwarder"
+ 
+### Start Configuration Options ###
+ 
+# The JSON config to use
+LJ_CONFIG=/opt/logstash-forwarder/logstash-forwarder.conf
+ 
+# The Lumberjack binary wrapper
+LJ_BIN=/opt/logstash-forwarder/logstash-forwarder
+ 
+# Any Lumberjack options
+LJ_OPTS="-spool-size 1000 -quiet=true"
+ 
+# The log file for local info
+LJ_LOG=/var/log/logstash-forwarder.log
+ 
+# The PID file
+PID_FILE=/var/run/logstash-forwarder
+ 
+# The command to daemonize
+DAEMON="nohup ${LJ_BIN} -config ${LJ_CONFIG} ${LJ_OPTS} >>${LJ_LOG} 2>&1 &"
+ 
+### End Configuration Options ###
+ 
+. /etc/init.d/functions
+ 
+check_prereqs() {
+  if [ -z ${LJ_BIN} ]; then
+    echo "ERROR: Unable to locate Lumberjack binary, make sure it's installed."
+    exit 1
+  elif [ ! -f ${LJ_CONFIG} ]; then
+    echo "ERROR: LJ_CONFIG (${LJ_CONFIG}) doesn't exist."
+    exit 1
+  elif [ ! -d `dirname ${LJ_LOG}` ]; then
+    echo "ERROR: LJ_LOG parent directory (`dirname ${LJ_LOG}`) doesn't exist."
+    exit 1
+  fi
+}
+ 
+start() {
+  check_prereqs
+ 
+  echo -n $"Starting $NAME: "
+ 
+  daemon --check $NAME --pidfile $PID_FILE $DAEMON
+ 
+  RETVAL=$?
+ 
+  if [ $RETVAL -ne 0 ]; then
+    echo_failure
+    echo
+  else
+    ps uwax | grep ${NAME} | grep -v grep | awk '{print $2}' > $PID_FILE
+    echo_success
+    echo
+  fi
+  return $RETVAL
+}
+ 
+stop () {
+  echo -n $"Stopping $NAME: "
+  killproc -p $PID_FILE $NAME
+  RETVAL=$?
+  echo
+  return $RETVAL
+}
+ 
+restart () {
+  stop
+  start
+}
+ 
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  status)
+    #status -p $PID_FILE $NAME
+    status -p $PID_FILE
+    ;;
+  restart)
+    restart
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status}"
+    exit 2
+    ;;
+esac
+ 
+exit $?

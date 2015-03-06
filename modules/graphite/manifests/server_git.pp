@@ -1,6 +1,8 @@
 class graphite::server_git {
     include httpd
-    $skyline_server = '10.10.10.6'
+    $skyline01 = '10.10.10.6'
+    $graphite01 = '10.10.10.3'
+    $graphite02 = '10.10.10.4'
 
     define init_carbon ( $test = $title, $carbon_name) { 
         file { "${carbon_name}":
@@ -69,7 +71,7 @@ class graphite::server_git {
 
    file { '/etc/httpd/conf.d/graphite.conf':
         ensure    => present,
-        content   => file('graphite/http_graphite.conf'),
+        content   => template('graphite/http_graphite.conf.erb'),
         mode      => '0644',
         owner     => 'root',
         group     => 'root',
@@ -128,7 +130,7 @@ class graphite::server_git {
 
    file { '/opt/graphite/webapp/graphite/local_settings.py':
         ensure    => present,
-        content   => file('graphite/local_settings.py'),
+        content   => template('graphite/local_settings.py.erb'),
         mode      => '0644',
         owner     => 'apache',
         group     => 'apache',
@@ -141,7 +143,7 @@ class graphite::server_git {
 
    file { '/opt/graphite/conf/carbon.conf':
         ensure    => present,
-        content   => file('graphite/carbon.conf'),
+        content   => template('graphite/carbon.conf.erb'),
         mode      => '0644',
         owner     => 'carbon',
         group     => 'carbon',

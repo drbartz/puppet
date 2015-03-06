@@ -4,15 +4,48 @@
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
+# Elasticsearch
+-A INPUT -m pkttype --pkt-type multicast -j ACCEPT 
+
 -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 -A INPUT -p icmp -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+# Syslog
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 514 -j ACCEPT
+# Logstash
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 5043 -j ACCEPT
+# carbon relay
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 2003 -j ACCEPT
+# carbon relay2
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 2013 -j ACCEPT
+# carbon aggregator
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 2023 -j ACCEPT
+# carbon cache a
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 2114 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 7102 -j ACCEPT
+# carbon cache b
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 2214 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 7202 -j ACCEPT
+# carbon cache c
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 2314 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 7302 -j ACCEPT
+# carbon cache d
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 2414 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 7402 -j ACCEPT
+# grafana2
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 3000 -j ACCEPT
+# kibana
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 5601 -j ACCEPT
+# ???
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+# Elasticsearch
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 9200:9400 -j ACCEPT
+# Zabbix
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 10050 -j ACCEPT
+# corosync test
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 5405 -j ACCEPT
 -A INPUT -j REJECT --reject-with icmp-host-prohibited
 -A FORWARD -j REJECT --reject-with icmp-host-prohibited
 COMMIT

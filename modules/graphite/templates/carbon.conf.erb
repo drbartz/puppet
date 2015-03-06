@@ -258,7 +258,7 @@ REPLICATION_FACTOR = 1
 # use multiple carbon-cache instances then it would look like this:
 #
 #DESTINATIONS = 127.0.0.1:2004:a, 127.0.0.1:2104:b, 127.0.0.1:2024
-DESTINATIONS = 127.0.0.1:2014, 127.0.0.1:2024, <%= @skyline_server %>:2024
+DESTINATIONS = 127.0.0.1:2014, 127.0.0.1:2024, <%= @skyline01 %>:2024
 #
 # The general form is IP:PORT:INSTANCE where the :INSTANCE part is
 # optional and refers to the "None" instance if omitted.
@@ -297,8 +297,8 @@ USE_FLOW_CONTROL = True
 LINE_RECEIVER_PORT = 2013
 PICKLE_RECEIVER_PORT = 2014
 RELAY_METHOD = consistent-hashing
-REPLICATION_FACTOR = 1
-DESTINATIONS = 127.0.0.1:2114:a, 127.0.0.1:2214:b, 127.0.0.1:2314:c, 127.0.0.1:2414:d
+REPLICATION_FACTOR = 2
+DESTINATIONS = <%= @graphite01 %>:2114:a, <%= @graphite01 %>:2214:b, <%= @graphite01 %>:2314:c, <%= @graphite01 %>:2414:d, <%= @graphite02 %>:2114:a, <%= @graphite02 %>:2214:b, <%= @graphite02 %>:2314:c, <%= @graphite02 %>:2414:d
 
 [aggregator]
 USER = carbon
@@ -320,7 +320,7 @@ FORWARD_ALL = True
 # generated metrics to. The default provided would send to a single
 # carbon-cache instance on the default port. However if you
 # use multiple carbon-cache instances then it would look like this:
-DESTINATIONS = 127.0.0.1:2014, <%= @skyline_server  %>:2024
+DESTINATIONS = 127.0.0.1:2014, <%= @skyline01  %>:2024
 
 # The format is comma-delimited IP:PORT:INSTANCE where the :INSTANCE part is
 # optional and refers to the "None" instance if omitted.
