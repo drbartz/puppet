@@ -7,5 +7,7 @@
 10.10.10.5  zabbix-server zabbix-server.local
 10.10.10.6  skyline skyline01 skyline.local skyline01.local
 10.10.10.7  oculus  oculus01 oculus.local oculus01.local
+10.10.10.8  errbot01 errbot01.local
+10.10.10.9  hubot01 hubot01.local
 10.10.10.10  kibana01 kibana01.local
 10.10.10.11  kibana02 kibana01.local
