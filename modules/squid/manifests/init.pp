@@ -27,12 +27,12 @@ class squid {
         ],
     }
 
-    file {'/etc/diamond/configs/squid.conf':
-        ensure  => present,
-        content => file('squid/diamond_squid.conf'),
-        require => Exec['/tmp/.install_diamond.sh'], 
-        #notify  => Service['diamond'],
-    }
+#    file {'/etc/diamond/configs/squid.conf':
+#        ensure  => present,
+#        content => file('squid/diamond_squid.conf'),
+#        require => Exec['/tmp/.install_diamond.sh'], 
+#        #notify  => Service['diamond'],
+#    }
 
     service { 'squid':
         ensure      => running,

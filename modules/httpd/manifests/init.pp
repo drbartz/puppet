@@ -34,12 +34,12 @@ class httpd {
         notify  => Service['httpd'],
     }
 
-    file {'/etc/diamond/configs/httpd.conf':
-        ensure  => present,
-        content => file('httpd/diamond_httpd.conf'),
-        require => Exec['/tmp/.install_diamond.sh'],
-        notify  => Service['diamond'],
-    }
+#    file {'/etc/diamond/configs/httpd.conf':
+#        ensure  => present,
+#        content => file('httpd/diamond_httpd.conf'),
+#        require => Exec['/tmp/.install_diamond.sh'],
+#        notify  => Service['diamond'],
+#    }
 
     service { 'httpd':
         ensure      => running,
