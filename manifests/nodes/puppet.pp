@@ -4,7 +4,7 @@ node /puppet.*/ {
     include puppet::client_fast
     include puppet::server
     #include zabbix::agent
-    include graphite::diamond
+#    include graphite::diamond
     include autocache
     include httpd
     include squid
